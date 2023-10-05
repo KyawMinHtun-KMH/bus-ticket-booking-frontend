@@ -1,8 +1,12 @@
+import { Route, Routes } from "react-router-dom";
+import AllTickets from "./components/pages/AllTickets";
 
 
 function App() {
   return (
-    <h1>hello react</h1>
+    <Routes>
+      <Route path="/" element={<AllTickets />}></Route>
+    </Routes>
   );
 }
 
