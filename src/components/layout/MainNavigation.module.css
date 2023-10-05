@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Gabarito&family=Oswald:wght@200&display=swap');
+
+#listitem{
+    font-family: 'Gabarito', cursive;
+    font-size: 1.3rem;
+}
+.navheader{
+    background-color:#10067b;
+}
+#logosize{
+    /* line-height: 15px; */
+    height: 60px;
+    width: 280px;
+}
