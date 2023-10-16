@@ -1,0 +1,14 @@
+#background{
+    background-image: url(https://cdn.wallpapersafari.com/87/83/aINmBZ.jpg);
+    /*width: auto;*/
+    height: 450px;
+    /*overflow: hidden;*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: contain;*/
+    background-size: cover; /* Adjust how the image covers the container */
+    background-position: center;
+}
+
+#searchbutton{
+    padding: 32px;
+}

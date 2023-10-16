@@ -8,14 +8,16 @@ const AllTickets = () => {
     const status = useSelector(getStatus)
 
     const dispatch = useDispatch()
-
+    const tickets = useSelector(getAllTickets)
+    
+    
     useEffect(() => {
         if (status === 'idle') {
             dispatch(fetchAllTickets())
         }
     },[status,dispatch])
 
-    const tickets = useSelector(getAllTickets)
+    
     const error = useSelector(getError)
 
     

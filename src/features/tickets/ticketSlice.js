@@ -1,10 +1,72 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit"
-import { ticketPath } from "../config/pathConfig"
+import { ticketPath,imagePath } from "../config/pathConfig"
 import axios from "axios"
 
-export const fetchAllTicketByRoute = createAsyncThunk("fetchAllTicketByRoute", async (RouteAndDepatureRequest) => {
+export const createTicket = createAsyncThunk("createTicket", async(data) =>{
+  try{
+  const response = await axios.post(`${ticketPath}/create`,data.ticketRequest,{
+    headers : {
+      'Content-Type' : 'application/json'
+    }
+  })
+  if(response.status === 201){
+    const uploadResponse = await axios.post(`${imagePath}upload/${response.data.id}`,data.formData,{
+      headers : {
+        'Content-Type' : 'multipart/form-data'
+      }
+    })
+    if(uploadResponse.status === 200){
+      console.log("image upload is successful")
+    }else{
+      console.log("upload failed")
+    }
+  }
+  return {
+    statusCode : response.status,
+    data : response.data
+  }
+}catch(error){
+  console.log("error occured")
+  console.error(error)
+}
+})
+
+export const updateTicket = createAsyncThunk("updateTicket", async(data) =>{
+  try{
+  const response = await axios.put(`${ticketPath}/update`,data.ticketRequest,{
+    headers : {
+      'Content-Type' : 'application/json'
+    }
+  })
+  console.log("###"+response.status)
+  
+  return {
+    statusCode : response.status,
+    data : response.data
+  }
+}catch(error){
+  console.log("error occured")
+  console.error(error)
+}
+})
+
+export const changeImage = createAsyncThunk("changeImage",async(data) =>{
+  const response = await axios.post(`${imagePath}upload/${data.id}`,data.formData,{
+    headers : {
+      'Content-Type' : 'multipart/form-data'
+    }
+  })
+  if(response.status === 200){
+    console.log("image upload is successful")
+  }else{
+    console.log("upload failed")
+  }
+})
+
+export const fetchAllTicketByRoute = createAsyncThunk("fetchAllTicketByRoute", async (routeAndDepatureRequest) => {
+  
     try {
-      const response = await axios.get(`${ticketPath}/searchticket`,RouteAndDepatureRequest,{
+      const response = await axios.post(`${ticketPath}/searchticket`,routeAndDepatureRequest,{
         headers : {
           'Content-Type' : 'application/json'
         }
@@ -14,7 +76,7 @@ export const fetchAllTicketByRoute = createAsyncThunk("fetchAllTicketByRoute", a
         data: response.data
       };
     } catch (error) {
-      console.error(error);
+      console.error(`${error} bla bla`)
     }
   });
 
@@ -45,8 +107,22 @@ export const fetchAllTickets = createAsyncThunk(
       }
     });
 
+    export const deleteTicket = createAsyncThunk("deleteTicket",async(data) => {
+      try{
+      const response = await axios.delete(`${ticketPath}/delete/${data.ticketId}`)
+
+      return {
+        statusCode : response.status,
+        ticketId : response.data
+      }
+    }catch(error){
+      console.error(error)
+    }
+    })
+
 const initialState ={
     tickets : [],
+    searchTickets : [],
     cities : [],
     status : "idle",
     error : null
@@ -63,11 +139,14 @@ const ticketSlice = createSlice({
             if (response?.statusCode) {
               const { statusCode, data } = response;
               if (statusCode === 200) {
-                state.tickets = [...data];
+                state.searchTickets = [...data];
                 state.status = "success"
               }
+              if(statusCode === 202){
+                state.status = "emptyRoute"
+              }
             }else {
-                console.log("error occured in fetchAllTicket");
+                console.log("error occured in fetchAllTicketByRoute");
               }
             })
             .addCase(fetchAllTicketByRoute.pending, (state) => {
@@ -80,7 +159,7 @@ const ticketSlice = createSlice({
           .addCase(fetchAllCity.fulfilled,(state,action)=>{
             const response = action.payload;
             if(response?.statusCode){
-                const { statusCode, data }=response;
+                const { statusCode, data } = response;
                 if(statusCode === 200){
                   state.cities = [...data]
                 }
@@ -92,7 +171,7 @@ const ticketSlice = createSlice({
             const response = action.payload;
     
             if (response?.statusCode) {
-              const { statusCode, data } = response;
+              const { statusCode, data } = response
     
               if (statusCode === 200) {
                 state.tickets = [...data];
@@ -104,7 +183,7 @@ const ticketSlice = createSlice({
                 state.error = String(data);
               }
             } else {
-              console.log("error occured in fetchAllTickets");
+              console.log("error occured in fetchAllTickets")
             }
           })
           .addCase(fetchAllTickets.pending, (state) => {
@@ -114,11 +193,52 @@ const ticketSlice = createSlice({
             state.status = "failed";
             state.error = action.payload;
           })
+          .addCase(createTicket.fulfilled,(state,action)=>{
+            const response = action.payload
+            if(response?.statusCode){
+              const { statusCode,data } = response
+              if(statusCode === 201){
+                state.status = "idle"
+                state.tickets = [data,...state.tickets]
+              }
+              if(statusCode === 400){
+                console.log(data)
+              }
+            }else{
+              console.log("error occur in createTicket")
+            }
+          })
+          .addCase(updateTicket.fulfilled,(state,action)=>{
+            const response = action.payload
+            if(response?.statusCode){
+              const { statusCode,data } = response
+              if(statusCode === 200){
+                state.status = "idle"
+                state.tickets = [data,...state.tickets.filter(ticket =>ticket.id !== Number(data.id))]
+              }
+            }else{
+              console.log("error ocuur in updateTicket")
+            }
+          })
+          .addCase(deleteTicket.fulfilled,(state,action)=>{
+            const response = action.payload
+            if(response?.statusCode){
+              const { statusCode,ticketId } = response
+              if(statusCode === 200){
+                state.status= "idle"
+                state.tickets = state.tickets.filter(ticket => ticket.id !== Number(ticketId))
+              }
+            }else{
+              console.log("error occured in deleteTicket")
+            }
+          })
     }
 })
 
 export default ticketSlice.reducer;
-export const getAllCity = (state) =>[...state.tickets.cities]
+export const getAllCity = (state) =>state.tickets.cities
 export const getAllTickets = (state) => state.tickets.tickets
 export const getStatus = (state) => state.tickets.status;
 export const getError = (state) => state.tickets.error;
+export const getAllSearchTickets = (state) => state.tickets.searchTickets
+export const getTicketById = (state,ticketId) =>state.tickets.tickets.find(ticket => ticket.id === Number(ticketId))

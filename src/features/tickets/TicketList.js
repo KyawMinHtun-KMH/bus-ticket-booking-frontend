@@ -5,7 +5,7 @@ import classes from './TicketList.module.css'
 const TicketList = ({tickets}) => {
     return (
         <ul className={classes.list}>
-           { tickets.map(ticket => <Ticket key={ticket.id} ticket={ticket}/>)}
+           { tickets.map(ticket => <Ticket key={ticket.id} ticket={ticket} />)}
         </ul>
       )
 }

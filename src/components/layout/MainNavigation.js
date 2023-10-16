@@ -1,6 +1,7 @@
 import React from 'react'
 import classes from "./MainNavigation.module.css";
 import image from './download.jpeg'
+import { Link } from 'react-router-dom';
 const MainNavigation = () => {
   return (
     <header className={classes.navheader}>
@@ -14,13 +15,13 @@ const MainNavigation = () => {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul id={classes.listitem} className="text-danger navbar-nav ms-auto">
           <li className="nav-item">
-            <a className="nav-link active text-white" aria-current="page" href="#">Home</a>
+            <Link to="/" className="nav-link active text-white" aria-current="page">Home</Link>
           </li>  
           <li className="nav-item">
-            <a className="nav-link text-white" href="#">Feature</a>
+            <Link to="/newTicket" className="nav-link text-white">NewTicket</Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link text-white" href="#">About</a>
+            <Link className="nav-link text-white" to="/allTicket">AllTicket</Link>
           </li>
           <li className="nav-item">
             <a className="nav-link text-white" href="#">Bla</a>
