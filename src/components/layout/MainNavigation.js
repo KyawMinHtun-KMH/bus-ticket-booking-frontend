@@ -15,21 +15,21 @@ const MainNavigation = () => {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul id={classes.listitem} className="text-danger navbar-nav ms-auto">
           <li className="nav-item">
-            <Link className="nav-link active text-white" aria-current="page" to="/">Home</Link>
+            <Link to="/" className="nav-link active text-white" aria-current="page">Home</Link>
           </li>  
           <li className="nav-item">
-            <Link className="nav-link text-white" to="/allTickets">All Tickets</Link>
+            <Link to="/newTicket" className="nav-link text-white">NewTicket</Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link text-white" to="/allTicket">AllTicket</Link>
+          </li>
+          
           <li className="nav-item">
             <Link className="nav-link text-white" to="/orders">Your Orders</Link>
           </li>
         </ul>
 
-        {/* <ul className="navbar-nav ms-auto"> 
-        <li className="nav-item">
-            <a className="nav-link" href="#">Features</a>
-          </li>
-        </ul> */}
+        
       </div>
     </div>
   </nav>
