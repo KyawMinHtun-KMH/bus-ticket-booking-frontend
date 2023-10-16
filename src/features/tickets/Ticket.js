@@ -2,7 +2,11 @@ import React from 'react'
 import Card from '../../components/ui/Card';
 import { useParams,useNavigate } from 'react-router-dom';
 import { imagePath } from '../config/pathConfig';
+import { Link } from 'react-router-dom';
+import UpdateTicketForm from './UpdateTicketForm';
+
 const Ticket = ({ticket}) => {
+  console.log(ticket)
 
   const { seatAmount } = useParams()
 
@@ -10,6 +14,7 @@ function dateTimeToTime(dateTime) {
     const date = new Date(dateTime);
     const hours = date.getHours();
     const minutes = date.getMinutes();
+    const formattedMinutes = String(minutes).padStart(2, '0')
     let hour = 0;
     if (hours > 12) {
         hour = hours-12; 
@@ -19,7 +24,7 @@ function dateTimeToTime(dateTime) {
 
     const dayNight = hours<12 ? 'AM' : 'PM' ;
 
-    return `${hour}:${minutes} ${dayNight}`
+    return `${hour}:${formattedMinutes} ${dayNight}`
 }
 
 function getMonthName(monthNumber) {
@@ -71,12 +76,20 @@ const canUpdate = (e)=>{
           <button className='btn btn-primary me-1'>Select Seats</button>
           <button onClick={canUpdate} className='btn btn-primary'>Update</button>
           
+          
         </div>
         
         {/*<div className='col-md-2 col-12 '>
           
         </div>*/}
-      </div>
+      
+          <Link to={`/ticketOrders/${ticket?.id}`} className='btn btn-primary mt-2' >
+            <span className='text-my text-bold'>Orders</span>
+          </Link>
+          <Link to={`/selectSeat/${ticket?.id}/${seatAmount}`} className='btn btn-primary mt-2' >
+            <span className='text-my text-bold'>Select Seat</span>
+          </Link>
+          </div>
     </li>
     </Card>
   )

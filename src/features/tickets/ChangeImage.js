@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { changeImage } from './ticketSlice'
 import { useDispatch } from 'react-redux'
-import { useParams,useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 const ChangeImage = () => {
     const {ticketId} = useParams()
@@ -16,7 +16,7 @@ const ChangeImage = () => {
 
     const canCreate = [image].every(Boolean) && requestStatus === 'idle'
 
-    const navigate = useNavigate()
+
 
 
     const onSubmit = (e)=>{

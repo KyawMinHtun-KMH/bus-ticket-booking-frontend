@@ -86,15 +86,15 @@ const onSubmit = e =>{
   if(canSearch){
     setRequestStatus('pending')
     dispatch(fetchAllTicketByRoute({
-      startLocation : startLocation.value,
-      endLocation : endLocation.value,
+      startLocation : String(startLocation.value),
+      endLocation : String(endLocation.value),
       depature
     }))
     setRequestStatus("idle")
     navigate(`/searchticket/${seatAmount}`)
     console.log(`#####${depature}`)
-    console.log("#3#"+startLocation)
-  console.log("333"+endLocation)
+    console.log("#3#"+startLocation.value)
+  console.log("333"+endLocation.value)
   }
 
 }

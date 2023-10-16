@@ -2,7 +2,7 @@ import React from 'react'
 import { useState,useEffect } from 'react'
 import { useParams,useNavigate } from 'react-router-dom'
 import { useSelector,useDispatch } from 'react-redux'
-import { getTicketById,updateTicket,deleteTicket } from './ticketSlice'
+import { getTicket,updateTicket,deleteTicket, fetchTicketByTicketId } from './ticketSlice'
 import { fetchAllBus,getAllBus } from '../bus/busSlice'
 import { getAllRoute,fetchAllRoute } from '../routes/routeSlice'
 
@@ -12,9 +12,18 @@ const UpdateTicketForm = () => {
     const { ticketId } = useParams();
     console.log(ticketId)
     
-    const existedTicket = useSelector((state) =>
-        getTicketById(state,ticketId)
-    )
+    // const existedTicket = useSelector((state) =>
+    //     getTicketById(state,ticketId)
+    // )
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+      dispatch(fetchTicketByTicketId(ticketId));
+    }, [dispatch, ticketId]);
+
+    const existedTicket =  useSelector(getTicket)
+
+    console.log(existedTicket)
     
     
     
@@ -38,7 +47,7 @@ const UpdateTicketForm = () => {
     
       const formattedDate = `${year}-${month}-${day}`;
 
-      const dispatch = useDispatch()
+      
 
       useEffect(()=>{
         dispatch(fetchAllBus())
