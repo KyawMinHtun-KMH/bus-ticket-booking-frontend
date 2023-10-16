@@ -1,0 +1,24 @@
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+  .test {
+    width: 150px;
+    height: 40px;
+    text-align: center;
+    padding: 7px;
+    text-decoration: none; /* Remove default text underline */
+    border-bottom: 3px solid transparent; /* Add transparent underline */
+    transition: border-color 0.2s; /* Add a transition for a smooth effect */
+    border: none;
+    background-color: white;
+  }
+  .test:active{
+    border-bottom: 2px solid blue;
+  }
+  .test:focus{
+    border-bottom: 2px solid blue;
+  }
+  
+  

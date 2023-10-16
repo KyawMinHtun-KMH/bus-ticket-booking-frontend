@@ -2,6 +2,21 @@ import { createSlice,createAsyncThunk } from "@reduxjs/toolkit"
 import { ticketPath } from "../config/pathConfig"
 import axios from "axios"
 
+export const fetchTicketByTicketId = createAsyncThunk(
+  "fetchTicketById",
+  async (ticketId) =>{
+    try {
+      const response = await axios.get(`${ticketPath}/${ticketId}`);
+      return {
+        statusCode: response.status,
+        data: response.data
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  }
+)
+
 export const fetchAllTicketByRoute = createAsyncThunk("fetchAllTicketByRoute", async (RouteAndDepatureRequest) => {
     try {
       const response = await axios.get(`${ticketPath}/searchticket`,RouteAndDepatureRequest,{
@@ -46,6 +61,7 @@ export const fetchAllTickets = createAsyncThunk(
     });
 
 const initialState ={
+    ticket:[],
     tickets : [],
     cities : [],
     status : "idle",
@@ -114,11 +130,31 @@ const ticketSlice = createSlice({
             state.status = "failed";
             state.error = action.payload;
           })
+          .addCase(fetchTicketByTicketId.fulfilled,(state,action) => {
+            const response = action.payload;
+    
+            if (response?.statusCode) {
+              const { statusCode, data } = response;
+    
+              if (statusCode === 200) {
+                state.ticket = data;
+                state.status = "success";
+              }
+    
+              if (statusCode === 404) {
+                state.status = "failed";
+                state.error = String(data);
+              }
+            } else {
+              console.log("error occured in fetchTicketById");
+            }
+          })
     }
 })
 
 export default ticketSlice.reducer;
-export const getAllCity = (state) =>[...state.tickets.cities]
-export const getAllTickets = (state) => state.tickets.tickets
+export const getAllCity = (state) => state.tickets.cities;
+export const getAllTickets = (state) => state.tickets.tickets;
 export const getStatus = (state) => state.tickets.status;
 export const getError = (state) => state.tickets.error;
+export const getTicket = (state) => state.tickets.ticket
