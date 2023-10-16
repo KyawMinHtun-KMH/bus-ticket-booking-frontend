@@ -24,7 +24,7 @@ function App() {
         <Route path="searchticket/:seatAmount" element={<ShowSearchTicket />} />
         <Route path="newTicket" element={<NewTicket />} />
         <Route path="ticket/update/:ticketId" element={<UpdateTicket/>} />
-        <Route path="ticketOrders/:ticketId" element={<Orders />} />
+        {/* <Route path="ticketOrders/:ticketId" element={<Orders />} /> */}
         <Route path="orders" element={<YourOrders />} />
         <Route path="selectSeat/:ticketid/:seatAmount" element={<Seats />} />
         <Route path="selectSeat/traveller/:objectParam/:arrayParam" element={<Traveller />} />

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState,useEffect } from 'react'
 import { useParams,useNavigate } from 'react-router-dom'
 import { useSelector,useDispatch } from 'react-redux'
-import { getTicket,updateTicket,deleteTicket, fetchTicketByTicketId } from './ticketSlice'
+import { getTicketById,updateTicket,deleteTicket } from './ticketSlice'
 import { fetchAllBus,getAllBus } from '../bus/busSlice'
 import { getAllRoute,fetchAllRoute } from '../routes/routeSlice'
 
@@ -12,23 +12,19 @@ const UpdateTicketForm = () => {
     const { ticketId } = useParams();
     console.log(ticketId)
     
-    // const existedTicket = useSelector((state) =>
-    //     getTicketById(state,ticketId)
-    // )
+    const ticket = useSelector((state) =>
+        getTicketById(state,ticketId)
+    )
     const dispatch = useDispatch()
 
-    useEffect(() => {
-      dispatch(fetchTicketByTicketId(ticketId));
-    }, [dispatch, ticketId]);
+    
 
-    const existedTicket =  useSelector(getTicket)
-
-    console.log(existedTicket)
+    console.log(ticket)
     
     
     
-    const existedStartLocation = existedTicket.route.startLocation
-    const existedEndLocation = existedTicket.route.endLocation
+    const existedStartLocation = ticket.route.startLocation
+    const existedEndLocation = ticket.route.endLocation
     const existedBindRoute = existedStartLocation+"-"+existedEndLocation
 
     function formatDateToISOStringWithoutSecondsAndMilliseconds(date) {
@@ -77,11 +73,11 @@ const UpdateTicketForm = () => {
   </option>)
 
 
-    const [typeName,setTypeName] = useState(existedTicket?.bus.typeName)
-    const [price,setPrice] = useState(existedTicket?.price)
-    const [depature,setDepature] = useState(existedTicket?.depature)
-    const [startDateTime,setStartDateTime] = useState(existedTicket?.startDateTime)
-    const [endDateTime,setEndDateTime] = useState(existedTicket?.endDateTime)
+    const [typeName,setTypeName] = useState(ticket?.bus.typeName)
+    const [price,setPrice] = useState(ticket?.price)
+    const [depature,setDepature] = useState(ticket?.depature)
+    const [startDateTime,setStartDateTime] = useState(ticket?.startDateTime)
+    const [endDateTime,setEndDateTime] = useState(ticket?.endDateTime)
     const [bindRoute,setBindRoute] = useState(existedBindRoute)
     const [requestStatus,setRequestStatus] = useState('idle')
 
@@ -109,7 +105,7 @@ const UpdateTicketForm = () => {
             dispatch(updateTicket({
                 ticketRequest : {
                     ticket : {
-                        id : existedTicket.id,
+                        id : ticket.id,
                         price,
                         depature,
                         startDateTime,

@@ -74,7 +74,10 @@ const canUpdate = (e)=>{
           <h4 className='text-success'>{`MMK ${totalPrice}`}</h4>
           <p>{`${seatAmount} seat x ${ticket.price}`}</p>
           <button className='btn btn-primary me-1'>Select Seats</button>
-          <button onClick={canUpdate} className='btn btn-primary'>Update</button>
+          {/* <button onClick={canUpdate} className='btn btn-primary'>Update</button> */}
+          <Link to={`/ticket/update/${ticket?.id}`} className='btn btn-primary mt-2' >
+            <span className='text-my text-bold'>Update</span>
+          </Link>
           
           
         </div>
