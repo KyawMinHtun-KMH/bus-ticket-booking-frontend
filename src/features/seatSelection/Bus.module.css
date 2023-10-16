@@ -1,0 +1,74 @@
+.table-seat-plan tbody tr td,
+.table-seat-plan tbody tr th,
+.table-seat-plan tfoot tr td,
+.table-seat-plan tfoot tr th,
+.table-seat-plan thead tr td,
+.table-seat-plan thead tr th {
+    border: none;
+    padding: 5px;
+}
+
+.seat{
+    color: blue;
+}
+
+.driverStandard {
+    background:  #e5e7e9;
+    border: 1px solid #888;
+    padding: 10px 10px 10px 10px;
+    margin: 5px;
+    margin-inline-end:10%;
+}
+
+.driver {
+    background:  #e5e7e9;
+    border: 1px solid #888;
+    padding: 10px 10px 10px 10px;
+    margin: 5px;
+    margin-inline-end:5%;
+}
+
+a.seat {
+    display: table;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+    color: #666;
+    border: 1px solid #888;
+}
+
+a.seat span {
+    display: table-cell;
+    text-align:center;
+    vertical-align: middle;
+    background:  #e5e7e9;
+    padding: 10px 5px 10px 5px;
+}
+a.seat:hover span {
+    background:  #e5e7e9 ;
+}
+
+a.seat-selected {
+    color: white
+}
+a.seat-selected span{
+    background: #1E90FF;
+}
+a.seat-selected:hover span {
+    background: #359bff;
+}
+
+a.seat-unavailable {
+    color: #aaa
+}
+a.seat-unavailable span, a.seat-unavailable:hover span{
+    background: #666;
+}
+
+.aisle {
+    display: table-cell;
+    text-align:center;
+    vertical-align: middle;
+    padding: 10px 5px 10px 5px;
+}
