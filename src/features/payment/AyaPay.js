@@ -4,6 +4,7 @@ import image from "../images/ayapay.png";
 import { useDispatch } from "react-redux";
 import { postNewOrder } from "../orders/orderSlice";
 import { useNavigate } from "react-router-dom";
+import { updateSeatStatus } from "../seatSelection/seatSlice";
 
 const AyaPay = ({ orderRequest, ayaPayCloseHandler }) => {
   const [name, setName] = useState("");
@@ -50,6 +51,7 @@ const AyaPay = ({ orderRequest, ayaPayCloseHandler }) => {
         ticketId: orderRequest.ticketId,
       })
     );
+    dispatch(updateSeatStatus({seatNumberArray}));
     setRequestStatus('idle')
     setName('')
     setPhone('')

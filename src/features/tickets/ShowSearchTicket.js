@@ -29,7 +29,6 @@ const ShowSearchTicket = () => {
 
   return (
     <section>
-      <h1>Search Ticket</h1>
       {content}
     </section>
   )

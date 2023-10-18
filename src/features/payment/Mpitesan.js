@@ -4,6 +4,7 @@ import image from "../images/mpitesan.png";
 import { useDispatch } from "react-redux";
 import { postNewOrder } from "../orders/orderSlice";
 import { useNavigate } from "react-router-dom";
+import { updateSeatStatus } from "../seatSelection/seatSlice";
 
 const Mpitesan = ({ orderRequest, mpitesanCloseHandler }) => {
   const [name, setName] = useState("");
@@ -50,6 +51,7 @@ const Mpitesan = ({ orderRequest, mpitesanCloseHandler }) => {
         ticketId: orderRequest.ticketId,
       })
     );
+    dispatch(updateSeatStatus({seatNumberArray}));
     setRequestStatus('idle')
     setName('')
     setPhone('')

@@ -283,6 +283,7 @@ const ticketSlice = createSlice({
           const { statusCode, data } = response;
 
           if (statusCode === 200) {
+              
             state.ticket = data;
             state.status = "success";
           }

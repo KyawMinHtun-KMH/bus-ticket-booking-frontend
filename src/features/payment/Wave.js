@@ -4,6 +4,7 @@ import image from "../images/wave.jpg";
 import { useDispatch } from "react-redux";
 import { postNewOrder } from "../orders/orderSlice";
 import { useNavigate } from "react-router-dom";
+import { updateSeatStatus } from "../seatSelection/seatSlice";
 
 const Wave = ({ orderRequest, waveCloseHandler }) => {
   const [name, setName] = useState("");
@@ -50,6 +51,7 @@ const Wave = ({ orderRequest, waveCloseHandler }) => {
         ticketId: orderRequest.ticketId,
       })
     );
+    dispatch(updateSeatStatus({seatNumberArray}));
     setRequestStatus('idle')
     setName('')
     setPhone('')

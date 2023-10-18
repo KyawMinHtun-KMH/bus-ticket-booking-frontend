@@ -14,7 +14,7 @@ const BusForm = () => {
 
     const typeName = name+" "+type
     
-    const capacity = type === "VIP" ? 27 : type === "Standard" ? 21 : 20
+    const capacity = type === "VIP" ? 27 : type === "Standard" ? 45 : 42
 
     const dispatch = useDispatch()
 

@@ -26,7 +26,21 @@ export const fetchSeatsByTicketId = createAsyncThunk(
 const seatSlice = createSlice({
     name : "seatSlice",
     initialState,
-    reducers : {},
+    reducers: {
+      updateSeatStatus: (state, action) => {
+        const { seatNumberArray } = action.payload;      
+        state.seats = state.seats.map((seat) => {
+          if (seatNumberArray.includes(seat.seat.seatNumber)) {
+            return { ...seat, status: false };
+          } else {
+            return seat; // Return the original seat for non-matching seats
+          }
+        });
+      }
+      
+    },
+    
+  
     extraReducers(builder){
         builder
         .addCase(fetchSeatsByTicketId.fulfilled, (state, action) => {
@@ -36,7 +50,10 @@ const seatSlice = createSlice({
               const { statusCode, data } = response;
     
               if (statusCode === 200) {
-                state.seats = [...data];
+                state.seats = 0
+                state.seats = [
+                    ...data
+                ];
                 state.status = "success";
               }
     
@@ -62,3 +79,4 @@ export default seatSlice.reducer;
 export const getStatus = (state) => state.seats.status;
 export const getError = (state) => state.seats.error;
 export const getSeats = (state) => state.seats.seats
+export const { updateSeatStatus } = seatSlice.actions;

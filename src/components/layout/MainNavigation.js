@@ -2,7 +2,31 @@ import React from 'react'
 import classes from "./MainNavigation.module.css";
 import image from './download.jpeg'
 import { Link } from 'react-router-dom';
+import {
+  getLoginStatus,
+  getUser,
+  logout
+} from "../../features/auths/authSlice";
+import { useDispatch, useSelector } from 'react-redux';
+
 const MainNavigation = () => {
+  const loginStatus = useSelector(getLoginStatus);
+  const user = useSelector(getUser);
+
+  const dispatch = useDispatch()
+
+  let navProfile = "";
+  let navLogin = "";
+  if (loginStatus) {
+    navProfile = (
+      <li className="nav-item">
+        <Link className="nav-link text-white" to="/user/profile">{user.fullname}</Link>
+      </li>
+    );
+    navLogin = <Link className="nav-link text-white" to="/user/logout" onClick={() => { dispatch(logout()) }}>Logout</Link>;
+  } else {
+    navLogin = <Link className="nav-link text-white" to="/user/login">Login</Link>;
+  }
   return (
     <header className={classes.navheader}>
     <div className='container'>
@@ -23,7 +47,8 @@ const MainNavigation = () => {
           <li className="nav-item">
             <Link className="nav-link text-white" to="/allTicket">AllTicket</Link>
           </li>
-          
+          {navProfile}
+          <li className="nav-item">{navLogin}</li>
           <li className="nav-item">
             <Link className="nav-link text-white" to="/orders">Your Orders</Link>
           </li>

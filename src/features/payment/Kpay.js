@@ -4,6 +4,7 @@ import image from "../images/kpay.png";
 import { useDispatch } from "react-redux";
 import { postNewOrder } from "../orders/orderSlice";
 import { useNavigate } from "react-router-dom";
+import { updateSeatStatus } from "../seatSelection/seatSlice";
 
 const Kpay = ({ orderRequest, kpayCloseHandler }) => {
   const [name, setName] = useState("");
@@ -51,6 +52,7 @@ const Kpay = ({ orderRequest, kpayCloseHandler }) => {
         ticketId: orderRequest.ticketId,
       })
     );
+    dispatch(updateSeatStatus({seatNumberArray}));
     setRequestStatus('idle')
     setName('')
     setPhone('')
