@@ -4,6 +4,7 @@ import routeSlice from "../features/routes/routeSlice";
 import busSlice from "../features/bus/busSlice";
 import orderSlice from "../features/orders/orderSlice";
 import seatSlice from "../features/seatSelection/seatSlice";
+import authSlice from "../features/auths/authSlice";
 
 export const store = configureStore({
     reducer : {
@@ -11,6 +12,7 @@ export const store = configureStore({
         routes : routeSlice,
         buses : busSlice,
         orders : orderSlice,
-        seats : seatSlice
+        seats : seatSlice,
+        auths : authSlice
     }
 })
