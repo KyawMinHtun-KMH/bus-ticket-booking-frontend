@@ -10,6 +10,8 @@ import PaymentUi from '../../components/ui/PaymentUi'
 
 const SearchTicket = () => {
 
+
+
   const [seatAmount,setSeatAmount] = useState(1)
   const [seatAmountText,setSeatAmountText] = useState("seat")
 

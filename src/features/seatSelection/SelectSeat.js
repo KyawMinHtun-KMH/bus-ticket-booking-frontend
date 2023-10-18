@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 const SelectSeat = ({ seats }) => {
   console.log(seats);
 
-  const { ticketid } = useParams();
+  const { seatAmount } = useParams()
+   const { ticketid } = useParams();
 
   const dispatch = useDispatch();
 
@@ -20,14 +21,13 @@ const SelectSeat = ({ seats }) => {
 
   console.log(ticket);
 
-  const maxClicks = 3; // Seat amount
   const [clickedValues, setClickedValues] = useState([]);
 
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
     const objectParam = encodeURIComponent(JSON.stringify(ticket));
-    const arrayParam = encodeURIComponent(JSON.stringify(clickedValues)); //
+    const arrayParam = encodeURIComponent(JSON.stringify(clickedValues));
     navigate(`/selectSeat/traveller/${objectParam}/${arrayParam}`);
   };
 
@@ -37,24 +37,23 @@ const SelectSeat = ({ seats }) => {
       setClickedValues(clickedValues.filter((val) => val !== value));
     } else {
       // Add the clicked value to the array
-      if (clickedValues.length < maxClicks) {
+      if (clickedValues.length < seatAmount) {
         setClickedValues([...clickedValues, value]);
       }
     }
   };
 
+  console.log(clickedValues)
+
   const isSeatDisabled = (value) => {
     const isDisabled = seats.some(
       (s) => s.seat.seatNumber === String(value) && s.status === false
     );
-    console.log(`Value: ${value}, Is Disabled: ${isDisabled}`);
     return isDisabled;
   };
 
-  console.log(isSeatDisabled(1));
-
   function busType(ticket) {
-    const capacity = 45;
+    const capacity = ticket.bus?.capacity;
     const capacityArray = [];
 
     for (let i = 1; i <= capacity; i++) {
@@ -136,70 +135,70 @@ const SelectSeat = ({ seats }) => {
         </div>
       );
     }
-    // if (String(ticket.bus?.typeName).includes("BUSSINESS")) {
-    //   return (
-    //     <div className="col offset-lg-1">
-    //       <div className={`${calsses.driverStandard}`}>Driver</div>
-    //       {capacityArray.map((value, index) => (
-    //         <React.Fragment key={index}>
-    //           {(value % 4 === 3 && value < 26) && (
-    //             <button
-    //               style={{ height: "50px", border: 0 }}
-    //               disabled
-    //               className="col-2 btn btn-outline-secondary me-2"
-    //             ></button>
-    //           )}
-    //           {(value === 27) && (
-    //             <>
-    //             <button
-    //               style={{ height: "50px", border: 0 }}
-    //               disabled
-    //               className="col-2 btn btn-outline-secondary me-2"
-    //             ></button>
-    //             <button
-    //               style={{ height: "50px", border: 0 }}
-    //               disabled
-    //               className="col-2 btn btn-outline-secondary me-2"
-    //             ></button>
-    //             <button
-    //               style={{ height: "50px", border: 0 }}
-    //               disabled
-    //               className="col-2 btn btn-outline-secondary me-2"
-    //             ></button>
-    //             </>
-    //           )}
-    //           {(value % 4 === 1 && value > 28) && (
-    //             <button
-    //               style={{ height: "50px", border: 0 }}
-    //               disabled
-    //               className="col-2 btn btn-outline-secondary me-2"
-    //             ></button>
-    //           )}
+    if (String(ticket.bus?.typeName).toLowerCase().includes("business")) {
+      return (
+        <div className="col offset-lg-1">
+          <div className={`${calsses.driverStandard}`}>Driver</div>
+          {capacityArray.map((value, index) => (
+            <React.Fragment key={index}>
+              {(value % 4 === 3 && value < 26) && (
+                <button
+                  style={{ height: "50px", border: 0 }}
+                  disabled
+                  className="col-2 btn btn-outline-secondary me-2"
+                ></button>
+              )}
+              {(value === 27) && (
+                <>
+                <button
+                  style={{ height: "50px", border: 0 }}
+                  disabled
+                  className="col-2 btn btn-outline-secondary me-2"
+                ></button>
+                <button
+                  style={{ height: "50px", border: 0 }}
+                  disabled
+                  className="col-2 btn btn-outline-secondary me-2"
+                ></button>
+                <button
+                  style={{ height: "50px", border: 0 }}
+                  disabled
+                  className="col-2 btn btn-outline-secondary me-2"
+                ></button>
+                </>
+              )}
+              {(value % 4 === 1 && value > 28) && (
+                <button
+                  style={{ height: "50px", border: 0 }}
+                  disabled
+                  className="col-2 btn btn-outline-secondary me-2"
+                ></button>
+              )}
               
-    //           <button
-    //             key={index}
-    //             onClick={() => handleClick(value)}
-    //             disabled={isSeatDisabled(value)}
-    //             style={{
-    //               height: "70px",
-    //               borderRadius: "0",
-    //               background: isSeatDisabled(value) ? "black" : "",
-    //             }}
-    //             className={`col-2 btn btn-outline-secondary m-1`}
-    //             value={value}
-    //           >
-    //             {isSeatDisabled(value) && (
-    //               <span className="lock-icon">
-    //                 <i className="bi bi-lock"></i>
-    //               </span>
-    //             )}
-    //             {value}
-    //           </button>
-    //         </React.Fragment>
-    //       ))}
-    //     </div>
-    //   );
-    // }
+              <button
+                key={index}
+                onClick={() => handleClick(value)}
+                disabled={isSeatDisabled(value)}
+                style={{
+                  height: "70px",
+                  borderRadius: "0",
+                  background: isSeatDisabled(value) ? "black" : "",
+                }}
+                className={`col-2 btn btn-outline-secondary m-1`}
+                value={value}
+              >
+                {isSeatDisabled(value) && (
+                  <span className="lock-icon">
+                    <i className="bi bi-lock"></i>
+                  </span>
+                )}
+                {value}
+              </button>
+            </React.Fragment>
+          ))}
+        </div>
+      );
+    }
   }
 
   return (
@@ -270,7 +269,7 @@ const SelectSeat = ({ seats }) => {
                 <div className="d-flex justify-content-center btn-lg">
                   <button
                     style={{ width: "100%" }}
-                    disabled={clickedValues.length < maxClicks}
+                    disabled={clickedValues.length < seatAmount}
                     onClick={handleButtonClick}
                     className="btn btn-success"
                   >

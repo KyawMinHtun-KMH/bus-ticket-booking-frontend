@@ -29,8 +29,7 @@ const ShowSearchTicket = () => {
    }
 
   return (
-    <section>
-      <h1>Search Ticket</h1>
+    <section className='mt-4'>
       {content}
     </section>
   )
