@@ -1,22 +1,23 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { getAllSearchTickets,getStatus,getError } from './ticketSlice'
-import TicketList from './TicketList'
+import { getAllSearchTickets,getSearchTicketsStatus,getError } from './ticketSlice'
+import UserSearchTickets from './UserSearchTickets'
+import EmptyTicket from './EmptyTicket'
 
 const ShowSearchTicket = () => {
    const searchTickets = useSelector(getAllSearchTickets)
 
-   const status = useSelector(getStatus)
+   const status = useSelector(getSearchTicketsStatus)
    const error = useSelector(getError)
 
    let content ;
 
    if(status=== "success"){
-    content = <TicketList tickets ={searchTickets}/>
+    content = <UserSearchTickets searchTickets={searchTickets}/>
    }
 
    if(status === "emptyRoute"){
-    content = <h1>This Route is not avaliable now</h1> 
+    content = <EmptyTicket />
    }
 
    if(status === "loading"){

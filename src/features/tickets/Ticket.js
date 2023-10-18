@@ -3,7 +3,7 @@ import Card from '../../components/ui/Card';
 import { useParams,useNavigate } from 'react-router-dom';
 import { imagePath } from '../config/pathConfig';
 import { Link } from 'react-router-dom';
-import UpdateTicketForm from './UpdateTicketForm';
+
 
 const Ticket = ({ticket}) => {
   console.log(ticket)
@@ -59,6 +59,7 @@ const canUpdate = (e)=>{
 }
     
   return (
+    
     <Card>
     <li>
       <div className='row'>

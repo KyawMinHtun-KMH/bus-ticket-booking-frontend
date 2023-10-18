@@ -63,6 +63,7 @@ export const updateTicket = createAsyncThunk("updateTicket", async (data) => {
 });
 
 export const changeImage = createAsyncThunk("changeImage", async (data) => {
+  try{
   const response = await axios.post(
     `${imagePath}upload/${data.id}`,
     data.formData,
@@ -72,11 +73,18 @@ export const changeImage = createAsyncThunk("changeImage", async (data) => {
       },
     }
   );
-  if (response.status === 200) {
-    console.log("image upload is successful");
-  } else {
-    console.log("upload failed");
+  console.log("image upload is successful")
+  return {
+    statusCode : response.status,
   }
+}catch(error){
+  console.log(error)
+}
+  // if (response.status === 200) {
+  //   console.log("image upload is successful");
+  // } else {
+  //   console.log("upload failed");
+  // }
 });
 
 export const fetchTicketByTicketId = createAsyncThunk(
@@ -162,6 +170,7 @@ const initialState = {
   searchTickets: [],
   cities: [],
   status: "idle",
+  searchTicketsStatus:"idle",
   error: null,
 };
 
@@ -177,20 +186,20 @@ const ticketSlice = createSlice({
           const { statusCode, data } = response;
           if (statusCode === 200) {
             state.searchTickets = [...data];
-            state.status = "success";
+            state.searchTicketsStatus = "success";
           }
           if (statusCode === 202) {
-            state.status = "emptyRoute";
+            state.searchTicketsStatus = "emptyRoute";
           }
         } else {
           console.log("error occured in fetchAllTicketByRoute");
         }
       })
       .addCase(fetchAllTicketByRoute.pending, (state) => {
-        state.status = "loading";
+        state.searchTicketsStatus = "loading";
       })
       .addCase(fetchAllTicketByRoute.rejected, (state, action) => {
-        state.status = "failed";
+        state.searchTicketsStatus = "failed";
         state.error = action.payload;
       })
       .addCase(fetchAllCity.fulfilled, (state, action) => {
@@ -294,7 +303,17 @@ const ticketSlice = createSlice({
         } else {
           console.log("error occured in fetchTicketById");
         }
-      });
+      })
+      .addCase(changeImage.fulfilled,(state,action)=>{
+        const response = action.payload
+
+        if(response?.statusCode){
+          const { statusCode } = response
+          if(statusCode === 200){
+            state.status = "idle"
+          }
+        }
+      })
   },
 });
 
@@ -302,6 +321,7 @@ export default ticketSlice.reducer;
 export const getAllCity = (state) => state.tickets.cities;
 export const getAllTickets = (state) => state.tickets.tickets;
 export const getStatus = (state) => state.tickets.status;
+export const getSearchTicketsStatus =(state) => state.tickets.searchTicketsStatus
 export const getError = (state) => state.tickets.error;
 export const getAllSearchTickets = (state) => state.tickets.searchTickets;
 export const getTicketById = (state, ticketId) =>
