@@ -112,6 +112,7 @@ const Ticket = ({ ticket }) => {
   }
   
   return (
+    
     <Card>
       <li>
         <div className="row">

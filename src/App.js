@@ -25,7 +25,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
       <Route index element={<SearchTicket />} />
-        <Route path="searchticket/:seatAmount" element={<ShowSearchTicket />} />
+        <Route path="searchticket/:seatAmount/:start/:end/:date" element={<ShowSearchTicket />} />
       <Route path="user" element={<NewUser />}>
           <Route path="register" element={<Signup />} />
           <Route path="login" element={<Signin />} />

@@ -5,9 +5,12 @@ import { fetchAllCity,fetchAllTicketByRoute } from './ticketSlice'
 import { useNavigate } from 'react-router-dom'
 import Select from 'react-select'
 import classes from './SearchTicket.module.css'
+import PaymentUi from '../../components/ui/PaymentUi'
 
 
 const SearchTicket = () => {
+
+
 
   const [seatAmount,setSeatAmount] = useState(1)
   const [seatAmountText,setSeatAmountText] = useState("seat")
@@ -82,6 +85,8 @@ const onSubmit = e =>{
   e.preventDefault()
   //console.log(`#####${depature}`)
   
+  const sIndex = renderedOptions.findIndex((renderedOption)=>renderedOption.value === startLocation.value)
+  const eIndex = renderedOptions.findIndex((renderedOption)=>renderedOption.value === endLocation.value)
   
   if(canSearch){
     setRequestStatus('pending')
@@ -91,14 +96,15 @@ const onSubmit = e =>{
       depature
     }))
     setRequestStatus("idle")
-    navigate(`/searchticket/${seatAmount}`)
-    console.log(`#####${depature}`)
-    console.log("#3#"+startLocation.value)
-  console.log("333"+endLocation.value)
+    navigate(`/searchticket/${seatAmount}/${sIndex}/${eIndex}/${depature}`)
+  //   console.log(`#####${depature}`)
+  //   console.log("#3#"+startLocation.value)
+  // console.log("333"+endLocation.value)
   }
 
 }
   return (
+    <>
     <div id={classes.background} className='col-12' /*style={{backgroundImage :"url(https://t3.ftcdn.net/jpg/05/70/65/04/240_F_570650424_yUIcZ8w0QHRe5aXwwk48LjnJ7u326Kj4.jpg)",backgroundRepeat:"no-repeat",height:"50vh",backgroundSize:"cover"}}*/>
     <div className='container'>
       <div className='row '>
@@ -110,7 +116,7 @@ const onSubmit = e =>{
   
   <div className="col-md-3 col-6">
     
-  <label className="form-label text-white">StartLocation</label>
+  <p className="text-white">StartLocation</p>
     <Select 
       value={startLocation}
       onChange={onStartLocationChange}
@@ -123,7 +129,7 @@ const onSubmit = e =>{
   
   
   <div className="col-md-3 col-6">
-  <label className="form-label text-white">EndLocation</label>
+  <p className="text-white">EndLocation</p>
   <Select 
       value={endLocation}
       onChange={onEndLocationChange}
@@ -134,12 +140,12 @@ const onSubmit = e =>{
   </div>
 
   <div className="col-md-2 col-6">
-    <label htmlFor="Depature" className="form-label text-white">Depature</label>
+    <label htmlFor="Depature" className="form-label text-white pb-2">Depature</label>
     <input type="date" className="form-control" id="Depature" value={depature} onChange={onDepatureChange} min={formattedDate} required/>
   </div>
 
   <div className="col-lg-2 col-6">
-    <label htmlFor="SeatAmount" className="form-label text-white">SeatAmount</label>
+    <p className="text-white">SeatAmount</p>
     <div className='d-flex justify-content-center'>
       <button onClick={minusSeatAmount} className="btn btn-light shadow-none border px-2" id="decrement-counter" name="decrement-counter" disabled="">
         <i className="fa fa-minus" id="decrement-icon" style={{color: 'blue'}}></i>
@@ -156,13 +162,16 @@ const onSubmit = e =>{
   </div>
   
   
-  <div className="d-grid gap-2 col-lg-2 col-12" id={classes.searchbutton}>
+  <div className="d-grid gap-2 col-lg-2 col-12 mt-4" id={classes.searchbutton}>
     <button type="submit" onClick={onSubmit} className="btn btn-danger">Search now</button>
   </div>
 </form>
 </div>
 </div>
 </div>
+
+<PaymentUi />
+</>
   )
 }
 
