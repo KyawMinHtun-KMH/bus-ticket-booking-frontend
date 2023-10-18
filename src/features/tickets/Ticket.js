@@ -110,6 +110,19 @@ const Ticket = ({ ticket }) => {
         </Link>
     )
   }
+
+  let userTicket = ""
+
+  if (Array.isArray(role) && role.includes("ROLE_USER")) {
+    userTicket = (
+      <>
+      <h4 className="text-success">{`MMK ${totalPrice}`}</h4>
+            <p>{`${seatAmount} seat x ${ticket.price}`}</p>
+      </>
+    )
+  } else userTicket = (
+    <h4>{`${ticket.price} MMK`}</h4>
+  )
   
   return (
     
@@ -135,8 +148,7 @@ const Ticket = ({ ticket }) => {
             <p>{`Arrives : ${dateTimeToDate(
               ticket.endDateTime
             )}, ${dateTimeToTime(ticket.endDateTime)}`}</p>
-            <h4 className="text-success">{`MMK ${totalPrice}`}</h4>
-            <p>{`${seatAmount} seat x ${ticket.price}`}</p>
+            {userTicket}
             {/* <button onClick={canUpdate} className='btn btn-primary'>Update</button> */}
           </div>
           {adminButton(orders,role)}
