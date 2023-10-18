@@ -138,7 +138,7 @@ const Ticket = ({ ticket }) => {
             <p>{`${seatAmount} seat x ${ticket.price}`}</p>
             {/* <button onClick={canUpdate} className='btn btn-primary'>Update</button> */}
           </div>
-          {adminButton(orders)}
+          {adminButton(orders,role)}
         </div>
       </li>
     </Card>
