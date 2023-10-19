@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ticketPath, imagePath } from "../config/pathConfig";
+import { ticketPath } from "../config/pathConfig";
 import axios from "axios";
 
 export const createTicket = createAsyncThunk("createTicket", async (data) => {
@@ -13,22 +13,7 @@ export const createTicket = createAsyncThunk("createTicket", async (data) => {
         },
       }
     );
-    if (response.status === 201) {
-      const uploadResponse = await axios.post(
-        `${imagePath}upload/${response.data.id}`,
-        data.formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      if (uploadResponse.status === 200) {
-        console.log("image upload is successful");
-      } else {
-        console.log("upload failed");
-      }
-    }
+    
     return {
       statusCode: response.status,
       data: response.data,
@@ -40,7 +25,7 @@ export const createTicket = createAsyncThunk("createTicket", async (data) => {
 });
 
 export const updateTicket = createAsyncThunk("updateTicket", async (data) => {
-  try {
+   try {
     const response = await axios.put(
       `${ticketPath}/update`,
       data.ticketRequest,
@@ -50,8 +35,7 @@ export const updateTicket = createAsyncThunk("updateTicket", async (data) => {
         },
       }
     );
-    console.log("###" + response.status);
-
+    
     return {
       statusCode: response.status,
       data: response.data,
@@ -62,30 +46,7 @@ export const updateTicket = createAsyncThunk("updateTicket", async (data) => {
   }
 });
 
-export const changeImage = createAsyncThunk("changeImage", async (data) => {
-  try{
-  const response = await axios.post(
-    `${imagePath}upload/${data.id}`,
-    data.formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
-  console.log("image upload is successful")
-  return {
-    statusCode : response.status,
-  }
-}catch(error){
-  console.log(error)
-}
-  // if (response.status === 200) {
-  //   console.log("image upload is successful");
-  // } else {
-  //   console.log("upload failed");
-  // }
-});
+
 
 export const fetchTicketByTicketId = createAsyncThunk(
   "fetchTicketById",
@@ -260,6 +221,7 @@ const ticketSlice = createSlice({
           const { statusCode, data } = response;
           if (statusCode === 200) {
             state.status = "idle";
+            console.log("change idle")
             state.tickets = [
               data,
               ...state.tickets.filter(
@@ -305,16 +267,7 @@ const ticketSlice = createSlice({
           console.log("error occured in fetchTicketById");
         }
       })
-      .addCase(changeImage.fulfilled,(state,action)=>{
-        const response = action.payload
-
-        if(response?.statusCode){
-          const { statusCode } = response
-          if(statusCode === 200){
-            state.status = "idle"
-          }
-        }
-      })
+      
   },
 });
 

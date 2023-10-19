@@ -19,12 +19,24 @@ import Signup from "./features/users/Signup";
 import Signin from "./features/users/Signin";
 import ProtectedRoute from "./features/auths/ProtectedRoute";
 import UnAuthorize from "./features/auths/UnAuthorize";
+import { getRoles } from "./features/auths/authSlice";
+import { useSelector } from "react-redux";
 
 function App() {
+  const role = useSelector(getRoles)
+
+  let adminRole = "";
+
+  if (Array.isArray(role) && role.includes("ROLE_ADMIN")) {
+    adminRole = (
+      <Route index element={<AllTickets />} />
+  )
+  }else adminRole = ( <Route index element={<SearchTicket />} />)
+
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-      <Route index element={<SearchTicket />} />
+      {adminRole}
         <Route path="searchticket/:seatAmount/:start/:end/:date" element={<ShowSearchTicket />} />
       <Route path="user" element={<NewUser />}>
           <Route path="register" element={<Signup />} />
@@ -53,7 +65,7 @@ function App() {
             <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}></ProtectedRoute>
           }
         >
-         <Route path="allTicket" element={<AllTickets />} />
+         
         <Route path="newTicket" element={<NewTicket />} />
         <Route path="ticket/update/:ticketId" element={<UpdateTicket/>} />
         <Route path="ticketOrders/:ticketId" element={<Orders />} /> 

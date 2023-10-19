@@ -39,9 +39,9 @@ const MainNavigation = () => {
     <li className="nav-item">
     <Link to="/newTicket" className="nav-link text-white">CreateTicket</Link>
   </li>
-  <li className="nav-item">
+  {/* <li className="nav-item">
     <Link className="nav-link text-white" to="/allTicket">Tickets</Link>
-  </li>
+  </li> */}
   </>
   )
   }
