@@ -4,9 +4,11 @@ import { useDispatch,useSelector } from "react-redux";
 import { fetchAllRoute,getAllRoute } from "../routes/routeSlice";
 import { createTicket } from "./ticketSlice";
 import { fetchAllBus, getAllBus } from "../bus/busSlice";
+import { useNavigate } from "react-router-dom";
 
 const TicketForm = () => {
-  const [image,setImage] = useState("")
+  
+  const [imageURL,setImageURL] = useState("")
   const [typeName,setTypeName] = useState("Scania Standard")
   const [price,setPrice] = useState(0.0)
   const [depature,setDepature] = useState("")
@@ -67,21 +69,19 @@ const onDepatureChange = e =>setDepature(e.target.value)
 const onStartDateTimeChange = e =>setStartDateTime(e.target.value)
 const onEndDateTimeChange = e =>setEndDateTime(e.target.value)
 const onBindRouteChange = e =>setBindRoute(e.target.value)
-const onImageChange = e =>setImage(e.target.files[0])
+const onImageURLChange = e =>setImageURL(e.target.value)
 
-const canCreate = [typeName,price,depature,startDateTime,endDateTime,bindRoute].every(Boolean) && requestStatus === 'idle'
+const canCreate = [typeName,imageURL,price,depature,startDateTime,endDateTime,bindRoute].every(Boolean) && requestStatus === 'idle'
 
 const index = bindRoute.indexOf('-')
 const startLocation = bindRoute.substring(0,index)
 const endLocation = bindRoute.substring(index+1)
 
 
-
+  const navigate = useNavigate()
 
   const onSubmit = (e) =>{
     e.preventDefault()
-    const formData = new FormData()
-    formData.append("file",image)
 
     if(canCreate){
       setRequestStatus('pending')
@@ -89,6 +89,7 @@ const endLocation = bindRoute.substring(index+1)
         ticketRequest :{
         ticket : {
           price,
+          imageURL,
           depature,
           startDateTime,
           endDateTime
@@ -98,18 +99,11 @@ const endLocation = bindRoute.substring(index+1)
           startLocation,
           endLocation
         }
-      },
-      formData
+      }
+      
       }))
       setRequestStatus("idle")
-      setPrice(0.0)
-      setDepature("")
-      setStartDateTime("")
-      setEndDateTime("")
-      setTypeName("Scania Standard")
-      setBindRoute("MANDALAY-YANGON")
-      setImage("")
-      /*navigate("/allTicket")*/
+      navigate("/")
       
     }
   }
@@ -138,7 +132,7 @@ const endLocation = bindRoute.substring(index+1)
         <label htmlFor="image" className="form-label" >
           Image
         </label>
-        <input type="file" className="form-control" id="image" onChange={onImageChange}/>
+        <input type="text" className="form-control" id="image" value={imageURL} onChange={onImageURLChange}/>
       </div>
       <div className="col-6">
         <label htmlFor="depature" className="form-label">

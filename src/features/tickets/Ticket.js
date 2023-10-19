@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Card from "../../components/ui/Card";
 import { useParams } from "react-router-dom";
-import { imagePath } from "../config/pathConfig";
 import { Link } from "react-router-dom";
 import { getStatus } from "./ticketSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -131,7 +130,8 @@ const Ticket = ({ ticket }) => {
         <div className="row">
           <div className="col-md-7">
             <img
-              src={`${imagePath}${ticket.id}.jpg`}
+              // src={`${imagePath}${ticket.id}.jpg`}
+              src={`${ticket.imageURL}`}
               alt="ticket.jpg"
               style={{ width: "500px", height: "300px" }}
             />
@@ -150,8 +150,9 @@ const Ticket = ({ ticket }) => {
             )}, ${dateTimeToTime(ticket.endDateTime)}`}</p>
             {userTicket}
             {/* <button onClick={canUpdate} className='btn btn-primary'>Update</button> */}
+            {adminButton(orders,role)}
           </div>
-          {adminButton(orders,role)}
+         
         </div>
       </li>
     </Card>

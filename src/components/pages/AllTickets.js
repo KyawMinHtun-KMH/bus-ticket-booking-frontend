@@ -14,6 +14,7 @@ const AllTickets = () => {
     useEffect(() => {
         if (status === 'idle') {
             dispatch(fetchAllTickets())
+            console.log("blablabla")
         }
     },[status,dispatch])
 

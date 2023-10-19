@@ -10,7 +10,6 @@ import { getAllRoute,fetchAllRoute } from '../routes/routeSlice'
 const UpdateTicketForm = () => {
 
     const { ticketId } = useParams();
-    console.log(ticketId)
     
     const ticket = useSelector((state) =>
         getTicketById(state,ticketId)
@@ -19,7 +18,7 @@ const UpdateTicketForm = () => {
 
     
 
-    console.log(ticket)
+    
     
     
     
@@ -71,8 +70,8 @@ const UpdateTicketForm = () => {
   >
   {bindRoute}
   </option>)
-
-
+    
+    const [imageURL,setImageURL] = useState(ticket?.imageURL)
     const [typeName,setTypeName] = useState(ticket?.bus.typeName)
     const [price,setPrice] = useState(ticket?.price)
     const [depature,setDepature] = useState(ticket?.depature)
@@ -86,9 +85,12 @@ const UpdateTicketForm = () => {
     const onDepatureChange = e =>setDepature(e.target.value)
     const onStartDateTimeChange = e =>setStartDateTime(e.target.value)
     const onEndDateTimeChange = e =>setEndDateTime(e.target.value)
+    const onImageURLChange = (e) => {
+      setImageURL(e.target.value)
+    }
     const onBindRouteChange = e =>setBindRoute(e.target.value)
 
-    const canUpdate = [typeName,price,depature,startDateTime,endDateTime,bindRoute].every(Boolean) && requestStatus === 'idle'
+    const canUpdate = [typeName,imageURL,price,depature,startDateTime,endDateTime,bindRoute].every(Boolean) && requestStatus === 'idle'
 
     const index = bindRoute.indexOf('-')
     const startLocation = bindRoute.substring(0,index)
@@ -107,6 +109,7 @@ const UpdateTicketForm = () => {
                     ticket : {
                         id : ticket.id,
                         price,
+                        imageURL,
                         depature,
                         startDateTime,
                         endDateTime
@@ -120,7 +123,8 @@ const UpdateTicketForm = () => {
             })
         )
         setRequestStatus("idle")
-        navigate("/allTicket")
+        navigate("/")
+      
         }
     }
 
@@ -129,7 +133,7 @@ const UpdateTicketForm = () => {
       dispatch(deleteTicket({
         ticketId
       }))
-      navigate("/allTicket")
+      navigate("/")
     }
 
   return (
@@ -159,7 +163,7 @@ const UpdateTicketForm = () => {
         </label>
         <input type="date" className="form-control" id="depature" value={depature} onChange={onDepatureChange} min={formattedDate}/>
       </div>
-      <div className="col-12">
+      <div className="col-6">
         <label htmlFor="startDateTime" className="form-label">
           Start DateTime
         </label>
@@ -171,6 +175,10 @@ const UpdateTicketForm = () => {
           onChange={onStartDateTimeChange}
           min={formattedDateTime}
         />
+      </div>
+      <div className='col-6'>
+        <label htmlFor="image" className="form-label">image</label>
+        <input type='text' id='image' value={imageURL} className="form-control" onChange={onImageURLChange}/>
       </div>
       <div className="col-md-6">
         <label htmlFor="endDateTime" className="form-label">
