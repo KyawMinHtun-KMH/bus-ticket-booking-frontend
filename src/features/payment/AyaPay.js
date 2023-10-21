@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import classes from "./Wave.module.css";
 import image from "../images/ayapay.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postNewOrder } from "../orders/orderSlice";
 import { useNavigate } from "react-router-dom";
 import { updateSeatStatus } from "../seatSelection/seatSlice";
+import { getToken } from "../auths/authSlice";
 
 const AyaPay = ({ orderRequest, ayaPayCloseHandler }) => {
   const [name, setName] = useState("");
@@ -25,6 +26,8 @@ const AyaPay = ({ orderRequest, ayaPayCloseHandler }) => {
   const seatNumberArray = orderRequest.seatNumber.map(String);
 
   const canCreate = [name,phone,transactionId].every(Boolean) && requestStatus === 'idle'
+
+  const token = useSelector(getToken)
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -49,6 +52,7 @@ const AyaPay = ({ orderRequest, ayaPayCloseHandler }) => {
           },
         },
         ticketId: orderRequest.ticketId,
+        token:String(token)
       })
     );
     dispatch(updateSeatStatus({seatNumberArray}));

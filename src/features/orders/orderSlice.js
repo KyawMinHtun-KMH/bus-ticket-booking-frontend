@@ -3,9 +3,15 @@ import axios from "axios";
 import { orderPath } from "../config/pathConfig";
 
 export const fetchDeleteOrder = createAsyncThunk("deleteOrder",
-async (orderId) => {
+async (data) => {
   try {
-    const response = await axios.delete(`${orderPath}/${orderId}/delete`);
+    const response = await axios.delete(`${orderPath}/${data.orderId}/delete`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization":data.token
+      },
+    });
     return {
       statusCode: response.status,
       orderId: response.data,
@@ -17,9 +23,15 @@ async (orderId) => {
 )
 
 export const fetchConfirmOrder = createAsyncThunk("confirmOrder",
-async (orderId) => {
+async (data) => {
   try {
-    const response = await axios.put(`${orderPath}/${orderId}/update`);
+    const response = await axios.put(`${orderPath}/${data.orderId}/update`,null,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization":data.token
+      },
+    });
     return {
       statusCode: response.status,
       data: response.data,
@@ -47,9 +59,15 @@ export const fetchOrdersByTicketId = createAsyncThunk(
 
 export const fetchOrdersByUser = createAsyncThunk(
   "fetchOrdersByUser",
-  async () => {
+  async (data) => {
     try {
-      const response = await axios.get(`${orderPath}/1/get`);
+      const response = await axios.get(`${orderPath}/get`,{
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization':data.token
+      },
+    }
+    );
       return {
         statusCode: response.status,
         data: response.data,
@@ -63,11 +81,12 @@ export const fetchOrdersByUser = createAsyncThunk(
 export const postNewOrder = createAsyncThunk("postNewOrder", async (data) => {
   try {
     const response = await axios.post(
-      `${orderPath}/create/${data.ticketId}/1`,
+      `${orderPath}/create/${data.ticketId}`,
       data.orderRequest,
       {
         headers: {
           "Content-Type": "application/json",
+          'Authorization':data.token
         },
       }
     );
@@ -161,16 +180,16 @@ const orderSlice = createSlice({
         const { statusCode, data } = response;
 
         if (statusCode === 200) {
-          state.orders = [...data];
+          state.order = [...data];
           state.status = "success";
         }
 
-        if (statusCode === 404) {
+        if (statusCode === 403) {
           state.status = "failed";
           state.error = String(data);
         }
       } else {
-        console.log("error occured in fetchOrdersByTicketId");
+        console.log("error occured in fetchOrdersByUser");
       }
     })
     .addCase(fetchOrdersByUser.pending, (state) => {
@@ -188,7 +207,7 @@ const orderSlice = createSlice({
 
           if (statusCode === 201) {
             state.status = 'idle'
-            state.order = [...state.orders,data]
+            state.order = [...state.order,data]
           }
           if (statusCode === 404) {
             console.log(data)
@@ -204,3 +223,5 @@ export default orderSlice.reducer;
 export const getOrders = (state) => state.orders.orders;
 export const getStatus = (state) => state.orders.status;
 export const getError = (state) => state.orders.error;
+// export const getOrderById = (state, orderId) =>
+//   state.orders.orders.find((order) => order.id === Number(orderId));

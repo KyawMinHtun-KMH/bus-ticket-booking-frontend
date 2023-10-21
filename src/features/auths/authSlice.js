@@ -42,6 +42,7 @@ const initialState = {
   loginStatus: false,
   user: {
   },
+  token : "",
   roles: [],
 };
 
@@ -52,6 +53,7 @@ const authSlice = createSlice({
     logout : (state) => {
        state.loginStatus = false
        state.user = {}
+       state.token = ""
        state.roles = []
     }
   },
@@ -65,6 +67,7 @@ const authSlice = createSlice({
           if (statusCode === 200) {
             state.loginStatus = data.success ? true : false;
             state.user = data.user;
+            state.token = data.token;
             state.roles = data.roles;
           } else {
             console.log("login failed due to server");
@@ -83,6 +86,7 @@ const authSlice = createSlice({
             state.loginStatus = data.success ? true : false;
             state.user = data.user;
             state.roles = data.roles;
+            state.token = data.token;
             console.log(data.user);
             console.log(data.roles);
             console.log(data.success);
@@ -100,4 +104,5 @@ export default authSlice.reducer;
 export const getLoginStatus = (state) => state.auths.loginStatus;
 export const getUser = (state) => state.auths.user;
 export const getRoles = (state) => state.auths.roles;
+export const getToken = (state) => state.auths.token;
 export const { logout } = authSlice.actions

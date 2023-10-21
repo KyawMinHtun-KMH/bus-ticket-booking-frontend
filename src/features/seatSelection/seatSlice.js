@@ -4,9 +4,9 @@ import { ticketPath } from "../config/pathConfig";
 
 export const fetchSeatsByTicketId = createAsyncThunk(
     "fetchSeatsByTicketId",
-    async (ticketId) =>{
+    async (ticketid) =>{
       try {
-        const response = await axios.get(`${ticketPath}/${ticketId}/ticketSeats`);
+        const response = await axios.get(`${ticketPath}/${ticketid}/ticketSeats`);
         return {
           statusCode: response.status,
           data: response.data

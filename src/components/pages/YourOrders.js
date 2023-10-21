@@ -3,17 +3,21 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchOrdersByUser, getError, getOrders, getStatus } from '../../features/orders/orderSlice'
 import { useEffect } from 'react'
 import UserOrderList from '../../features/orders/UserOrderList'
+import { getToken } from '../../features/auths/authSlice'
 
 const YourOrders = () => {
     const status = useSelector(getStatus)
 
     const dispatch = useDispatch()
+    const token = useSelector(getToken)
 
     useEffect(() => {
-        if (status === 'idle') {
-            dispatch(fetchOrdersByUser())
-        }
-    },[status,dispatch])
+        
+            dispatch(fetchOrdersByUser({
+                token:String(token)
+    }))
+        
+    },[dispatch,token])
 
     const orders = useSelector(getOrders)
     const error = useSelector(getError)

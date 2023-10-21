@@ -10,25 +10,34 @@ const SelectSeat = ({ seats }) => {
 
   const { seatAmount } = useParams()
    const { ticketid } = useParams();
+   console.log(ticketid);
 
   const dispatch = useDispatch();
+  const ticketId = ticketid
 
   useEffect(() => {
-    dispatch(fetchTicketByTicketId(ticketid));
-  }, [dispatch, ticketid]);
+    dispatch(fetchTicketByTicketId(ticketId));
+  }, [dispatch, ticketId]);
 
   const ticket = useSelector(getTicket);
 
   console.log(ticket);
 
   const [clickedValues, setClickedValues] = useState([]);
+  // const ticketObj = {
+  //   id:ticket.id,
+  //   startLocation:ticket.route.startLocation,
+  //   endLocation:ticket.route.endLocation,
+  //   startDateTime:ticket.startDateTime,
+  //   endDateTime:ticket.endDateTime,
+  //   price:ticket.price
+  // }
 
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    const objectParam = encodeURIComponent(JSON.stringify(ticket));
     const arrayParam = encodeURIComponent(JSON.stringify(clickedValues));
-    navigate(`/selectSeat/traveller/${objectParam}/${arrayParam}`);
+    navigate(`/selectSeat/traveller/${ticketId}/${arrayParam}`);
   };
 
   const handleClick = (value) => {
@@ -247,7 +256,7 @@ const SelectSeat = ({ seats }) => {
                   <tr>
                     <td className="text-success font-weight-bold">Subtotal</td>
                     <td className="text-success font-weight-bold">
-                      {ticket.price * 3} MMK
+                      {ticket.price * seatAmount} MMK
                     </td>
                   </tr>
                 </tbody>

@@ -2,6 +2,7 @@ import { React,useEffect,useState } from "react";
 import { fetchAllCity,getAllCity } from "../tickets/ticketSlice";
 import { createRoute } from "./routeSlice";
 import { useSelector,useDispatch } from "react-redux";
+import { getToken } from "../auths/authSlice";
 const RouteForm = () => {
 
   const [startLocation,setStartLocation] = useState("AUNGPAN")
@@ -21,6 +22,8 @@ const RouteForm = () => {
 
 const dispatch = useDispatch();
 
+const token = useSelector(getToken)
+
 useEffect(()=>{
   dispatch(fetchAllCity())
 },[dispatch])
@@ -32,8 +35,11 @@ const onSubmit = (e) =>{
   setRequestStatus('pending')
   if(canCreate){
     dispatch(createRoute({
+      route : {
       startLocation,
-      endLocation
+      endLocation,
+      },
+      token :String(token)
     }))
 
     setRequestStatus("idle")

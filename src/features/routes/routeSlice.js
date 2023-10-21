@@ -3,9 +3,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 import { routePath } from "../config/pathConfig"
 
-export const fetchAllRoute = createAsyncThunk("fetchAllRoute",async()=>{
+export const fetchAllRoute = createAsyncThunk("fetchAllRoute",async(data)=>{
     try{
-    const response = await axios.get(`${routePath}/all`);
+    const response = await axios.get(`${routePath}/all`,
+    {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization":data.token
+        },
+      });
     return {
         statusCode : response.status,
         data : response.data
@@ -15,11 +21,12 @@ export const fetchAllRoute = createAsyncThunk("fetchAllRoute",async()=>{
 }
 })
 
-export const createRoute = createAsyncThunk("createRoute",async(route) =>{
+export const createRoute = createAsyncThunk("createRoute",async(data) =>{
     try{
-    const response = await axios.post(`${routePath}/create`,route,{
+    const response = await axios.post(`${routePath}/create`,data.route,{
         headers : {
-            'Content-Type' : 'application/json'
+            'Content-Type' : 'application/json',
+            'Authorization' : data.token
         }
     })
 

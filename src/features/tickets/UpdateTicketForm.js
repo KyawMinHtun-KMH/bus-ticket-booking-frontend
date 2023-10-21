@@ -5,6 +5,7 @@ import { useSelector,useDispatch } from 'react-redux'
 import { getTicketById,updateTicket,deleteTicket } from './ticketSlice'
 import { fetchAllBus,getAllBus } from '../bus/busSlice'
 import { getAllRoute,fetchAllRoute } from '../routes/routeSlice'
+import { getToken } from '../auths/authSlice'
 
 
 const UpdateTicketForm = () => {
@@ -16,11 +17,7 @@ const UpdateTicketForm = () => {
     )
     const dispatch = useDispatch()
 
-    
-
-    
-    
-    
+    const token = useSelector(getToken)
     
     const existedStartLocation = ticket.route.startLocation
     const existedEndLocation = ticket.route.endLocation
@@ -45,8 +42,10 @@ const UpdateTicketForm = () => {
       
 
       useEffect(()=>{
-        dispatch(fetchAllBus())
-      },[dispatch])
+        dispatch(fetchAllBus({
+          token:String(token)
+        }))
+      },[dispatch,token])
     
       const buses = useSelector(getAllBus)
       const typeNames = buses.map((bus) => bus.typeName)
@@ -58,8 +57,10 @@ const UpdateTicketForm = () => {
       </option>)
 
     useEffect(()=>{
-    dispatch(fetchAllRoute())
-  },[dispatch])
+    dispatch(fetchAllRoute({
+      token:String(token)
+    }))
+  },[dispatch,token])
 
   const routes = useSelector(getAllRoute)
   const bindRoutes = routes.map((route)=>route.startLocation+"-"+route.endLocation)
@@ -119,7 +120,8 @@ const UpdateTicketForm = () => {
                         startLocation,
                         endLocation
                       }
-                }
+                },
+                token :String(token)
             })
         )
         setRequestStatus("idle")
@@ -131,7 +133,8 @@ const UpdateTicketForm = () => {
     const onDelete = (e) =>{
       e.preventDefault()
       dispatch(deleteTicket({
-        ticketId
+        ticketId,
+        token :String(token)
       }))
       navigate("/")
     }
