@@ -15,8 +15,6 @@ import Seats from "./features/seatSelection/Seats";
 import PaymentConfirmation from "./features/payment/PaymentConfirmation";
 import YourOrders from "./components/pages/YourOrders";
 import NewUser from "./components/pages/NewUser";
-import Signup from "./features/users/Signup";
-import Signin from "./features/users/Signin";
 import ProtectedRoute from "./features/auths/ProtectedRoute";
 import UnAuthorize from "./features/auths/UnAuthorize";
 import { getRoles } from "./features/auths/authSlice";
