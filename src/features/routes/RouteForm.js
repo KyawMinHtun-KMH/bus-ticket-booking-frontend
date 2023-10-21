@@ -1,26 +1,29 @@
-import { React,useEffect,useState } from "react";
-import { fetchAllCity,getAllCity } from "../tickets/ticketSlice";
+import { React, useEffect, useState } from "react";
+import { fetchAllCity, getAllCity } from "../tickets/ticketSlice";
 import { createRoute } from "./routeSlice";
 import { useSelector,useDispatch } from "react-redux";
 import { getToken } from "../auths/authSlice";
+import Select from "react-select";
 const RouteForm = () => {
+  const [startLocation, setStartLocation] = useState(null);
+  const [endLocation, setEndLocation] = useState(null);
+  const [requestStatus, setRequestStatus] = useState("idle");
 
-  const [startLocation,setStartLocation] = useState("AUNGPAN")
-  const [endLocation,setEndLocation] = useState("AUNGPAN")
-  const [requestStatus,setRequestStatus] = useState('idle')
+  const cities = useSelector(getAllCity);
+  const renderedOptions = cities.map((city) => ({
+    value: `${String(city)}`,
+    label: `${city}`,
+  }));
 
-  const cities = useSelector(getAllCity)
-  const renderedOptions = cities.map(city => <option
-    key={city}
-    value={city}
-  >
-    {String(city).toLowerCase()}
-  </option>)
+  const onStartLocationChange = (startLocation) =>
+    setStartLocation(startLocation);
+  const onEndLocationChange = (endLocation) => setEndLocation(endLocation);
 
-  const onStartLocationChange = (e) => setStartLocation(e.target.value)
-  const onEndLocationChange = (e) => setEndLocation(e.target.value)
+  const dispatch = useDispatch();
 
-const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAllCity());
+  }, [dispatch]);
 
 const token = useSelector(getToken)
 
@@ -42,12 +45,11 @@ const onSubmit = (e) =>{
       token :String(token)
     }))
 
-    setRequestStatus("idle")
-    setStartLocation("")
-    setEndLocation("")
-  }
-}
-
+      setRequestStatus("idle");
+      setStartLocation(null);
+      setEndLocation(null);
+    }
+  };
 
   return (
     <div className="accordion my-5 " id="accordionExample">
@@ -61,7 +63,7 @@ const onSubmit = (e) =>{
             aria-expanded="false"
             aria-controls="createRoute"
           >
-            <h5 className="text-success">Create Route</h5> 
+            <h5 className="text-success">Create Route</h5>
           </button>
         </h2>
         <div
@@ -70,28 +72,34 @@ const onSubmit = (e) =>{
           data-bs-parent="#accordionExample"
         >
           <div className="accordion-body">
-            
-                <form className="row">
-                  <div className="col-md-5 col-12 my-2">
-                    <label htmlFor="startLocation" className="form-label">
-                      Start Location
-                    </label>
-                    <select id="startLocation" className="form-select" value={startLocation} onChange={onStartLocationChange} required>
-                      {renderedOptions}
-                    </select>
-                  </div>
-                  <div className="col-md-5 col-12 my-2">
-                    <label htmlFor="endLocation" className="form-label">
-                      EndLocation
-                    </label>
-                    <select id="endLocation" className="form-select" value={endLocation} onChange={onEndLocationChange} required>
-                      {renderedOptions}
-                    </select>
-                  </div>
-                  <div className="d-flex align-items-end justify-content-center col-md-2 col-12 my-2">
-                     <button onClick={onSubmit} className="btn btn-primary">create</button>
-                  </div>
-                </form>   
+            <form className="row">
+              <div className="col-md-5 col-12 my-2">
+                <p className="text-dark">StartLocation</p>
+                <Select
+                  value={startLocation}
+                  onChange={onStartLocationChange}
+                  options={renderedOptions}
+                  isSearchable={true}
+                  placeholder="From"
+                />
+              </div>
+
+              <div className="col-md-5 col-12 my-2">
+                <p className="text-dark">EndLocation</p>
+                <Select
+                  value={endLocation}
+                  onChange={onEndLocationChange}
+                  options={renderedOptions}
+                  isSearchable={true}
+                  placeholder="To"
+                />
+              </div>
+              <div className="d-flex align-items-end justify-content-center col-md-2 col-12 my-2">
+                <button onClick={onSubmit} className="btn btn-primary">
+                  create
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
