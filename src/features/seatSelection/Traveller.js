@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { dateTimeToDate, dateTimeToTime } from "../dateTime/dateTime";
+import { fetchTicketByTicketId, getTicket } from "../tickets/ticketSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Traveller = () => {
-  const { objectParam, arrayParam } = useParams();
-  const ticket = JSON.parse(decodeURIComponent(objectParam));
+  const { ticketId,arrayParam } = useParams();
   const selectSeat = JSON.parse(decodeURIComponent(arrayParam));
 
   const [name, setName] = useState("");
@@ -18,6 +19,13 @@ const Traveller = () => {
   const onPhoneChange = (e) => setPhone(e.target.value);
   const onEmailChange = (e) => setEmail(e.target.value);
   const onSpecialRequestChange = (e) => setSpecialRequest(e.target.value);
+  
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchTicketByTicketId(ticketId));
+  }, [dispatch, ticketId]);
+
+  const ticket = useSelector(getTicket);
 
   const traveller = {
     name,
@@ -37,7 +45,7 @@ const Traveller = () => {
   const handleButtonClick = () => {
     const travellerParam = encodeURIComponent(JSON.stringify(traveller));
     navigate(
-      `/selectSeat/traveller/${objectParam}/${arrayParam}/${travellerParam}`
+      `/selectSeat/traveller/${ticket.id}/${arrayParam}/${travellerParam}`
     );
 
   }
@@ -244,7 +252,7 @@ const Traveller = () => {
 
                   <tr>
                     <td>Route</td>
-                    <td>{`${ticket.route?.startLocation} - ${ticket.route?.endLocation}`}</td>
+                    <td>{`${ticket.route.startLocation} - ${ticket.route.endLocation}`}</td>
                   </tr>
                   <tr>
                     <td>Departure Time</td>

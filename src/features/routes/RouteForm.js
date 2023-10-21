@@ -1,7 +1,8 @@
 import { React, useEffect, useState } from "react";
 import { fetchAllCity, getAllCity } from "../tickets/ticketSlice";
 import { createRoute } from "./routeSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { getToken } from "../auths/authSlice";
 import Select from "react-select";
 const RouteForm = () => {
   const [startLocation, setStartLocation] = useState(null);
@@ -24,19 +25,25 @@ const RouteForm = () => {
     dispatch(fetchAllCity());
   }, [dispatch]);
 
-  const canCreate =
-    [startLocation, endLocation].every(Boolean) && requestStatus === "idle";
+const token = useSelector(getToken)
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    setRequestStatus("pending");
-    if (canCreate) {
-      dispatch(
-        createRoute({
-          startLocation: String(startLocation.value),
-          endLocation: String(endLocation.value),
-        })
-      );
+useEffect(()=>{
+  dispatch(fetchAllCity())
+},[dispatch])
+
+const canCreate = [startLocation,endLocation].every(Boolean) && requestStatus === "idle"
+
+const onSubmit = (e) =>{
+  e.preventDefault()
+  setRequestStatus('pending')
+  if(canCreate){
+    dispatch(createRoute({
+      route : {
+      startLocation,
+      endLocation,
+      },
+      token :String(token)
+    }))
 
       setRequestStatus("idle");
       setStartLocation(null);

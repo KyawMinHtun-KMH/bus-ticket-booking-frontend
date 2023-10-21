@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import classes from "./Wave.module.css";
 import image from "../images/kpay.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postNewOrder } from "../orders/orderSlice";
 import { useNavigate } from "react-router-dom";
 import { updateSeatStatus } from "../seatSelection/seatSlice";
+import { getToken } from "../auths/authSlice";
 
 const Kpay = ({ orderRequest, kpayCloseHandler }) => {
   const [name, setName] = useState("");
@@ -25,6 +26,8 @@ const Kpay = ({ orderRequest, kpayCloseHandler }) => {
   const seatNumberArray = orderRequest.seatNumber.map(String);
 
   const canCreate = [name,phone,transactionId].every(Boolean) && requestStatus === 'idle'
+
+  const token = useSelector(getToken)
 
   console.log(orderRequest.ticketId);
   const onSubmit = (e) => {
@@ -50,6 +53,7 @@ const Kpay = ({ orderRequest, kpayCloseHandler }) => {
           },
         },
         ticketId: orderRequest.ticketId,
+        token:String(token)
       })
     );
     dispatch(updateSeatStatus({seatNumberArray}));

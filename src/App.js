@@ -21,6 +21,7 @@ import ProtectedRoute from "./features/auths/ProtectedRoute";
 import UnAuthorize from "./features/auths/UnAuthorize";
 import { getRoles } from "./features/auths/authSlice";
 import { useSelector } from "react-redux";
+import SigninSignup from "./features/users/SigninSignup";
 
 function App() {
   const role = useSelector(getRoles)
@@ -39,8 +40,8 @@ function App() {
       {adminRole}
         <Route path="searchticket/:seatAmount/:start/:end/:date" element={<ShowSearchTicket />} />
       <Route path="user" element={<NewUser />}>
-          <Route path="register" element={<Signup />} />
-          <Route path="login" element={<Signin />} />
+          {/* <Route path="register" element={<Signup />} /> */}
+          <Route path="login" element={<SigninSignup />} />
           <Route path="logout" element={<Navigate to="/" replace={true} />} />
         </Route>
 
@@ -54,8 +55,8 @@ function App() {
         <Route path="unauthorized" element={<UnAuthorize />} />
         <Route path="orders" element={<YourOrders />} />
         <Route path="selectSeat/:ticketid/:seatAmount" element={<Seats />} />
-        <Route path="selectSeat/traveller/:objectParam/:arrayParam" element={<Traveller />} />
-        <Route path="selectSeat/traveller/:objectParam/:arrayParam/:travellerParam" element={<Payment />} />
+        <Route path="selectSeat/traveller/:ticketId/:arrayParam" element={<Traveller />} />
+        <Route path="selectSeat/traveller/:ticketId/:arrayParam/:travellerParam" element={<Payment />} />
         <Route path="order/payment/confirmation" element={<PaymentConfirmation />} />
         </Route>
 

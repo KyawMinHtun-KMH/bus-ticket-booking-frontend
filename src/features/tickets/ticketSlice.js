@@ -10,6 +10,7 @@ export const createTicket = createAsyncThunk("createTicket", async (data) => {
       {
         headers: {
           "Content-Type": "application/json",
+          "Authorization":data.token
         },
       }
     );
@@ -32,6 +33,7 @@ export const updateTicket = createAsyncThunk("updateTicket", async (data) => {
       {
         headers: {
           "Content-Type": "application/json",
+          'Authorization':data.token
         },
       }
     );
@@ -98,9 +100,16 @@ export const fetchAllCity = createAsyncThunk("fetchAllCity", async () => {
   }
 });
 
-export const fetchAllTickets = createAsyncThunk("fetchAllTickets", async () => {
+export const fetchAllTickets = createAsyncThunk("fetchAllTickets", async (data) => {
   try {
-    const response = await axios.get(`${ticketPath}/all`);
+    const response = await axios.get(`${ticketPath}/all`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization":data.token
+      },
+    }
+    );
     return {
       statusCode: response.status,
       data: response.data,
@@ -113,7 +122,13 @@ export const fetchAllTickets = createAsyncThunk("fetchAllTickets", async () => {
 export const deleteTicket = createAsyncThunk("deleteTicket", async (data) => {
   try {
     const response = await axios.delete(
-      `${ticketPath}/delete/${data.ticketId}`
+      `${ticketPath}/delete/${data.ticketId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization":data.token
+        },
+      }
     );
 
     return {

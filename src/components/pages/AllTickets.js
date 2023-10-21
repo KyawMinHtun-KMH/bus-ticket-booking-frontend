@@ -2,6 +2,7 @@ import React,{ useEffect } from 'react'
 import { useSelector,useDispatch } from 'react-redux'
 import TicketList from '../../features/tickets/TicketList'
 import { fetchAllTickets, getAllTickets, getError, getStatus } from '../../features/tickets/ticketSlice'
+import { getToken } from '../../features/auths/authSlice'
 
 const AllTickets = () => {
 
@@ -9,14 +10,18 @@ const AllTickets = () => {
 
     const dispatch = useDispatch()
     const tickets = useSelector(getAllTickets)
+    const token = useSelector(getToken)
     
     
     useEffect(() => {
         if (status === 'idle') {
-            dispatch(fetchAllTickets())
-            console.log("blablabla")
+            dispatch(fetchAllTickets(
+                {
+                    token:String(token)
+                }
+            ))
         }
-    },[status,dispatch])
+    },[status,dispatch,token])
 
     
     const error = useSelector(getError)

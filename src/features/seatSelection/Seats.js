@@ -11,10 +11,10 @@ const Seats = () => {
     
     const dispatch = useDispatch()
     useEffect(() => {
-        if (status === 'idle') {
+        
             dispatch(fetchSeatsByTicketId(ticketid))
-        }
-    },[status,dispatch,ticketid])
+        
+    },[dispatch,ticketid])
 
     const error = useSelector(getError)
     const seats = useSelector(getSeats)

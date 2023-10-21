@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { dateTimeToDate, dateTimeToTime } from "../dateTime/dateTime";
 import wave from "../images/wave.jpg";
@@ -14,10 +14,11 @@ import AyaPay from "../payment/AyaPay";
 import UabPay from "../payment/UabPay";
 import OnePay from "../payment/OnePay";
 import Mpitesan from "../payment/Mpitesan";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTicketByTicketId, getTicket } from "../tickets/ticketSlice";
 
 const Payment = () => {
-  const { objectParam, arrayParam, travellerParam } = useParams();
-  const ticket = JSON.parse(decodeURIComponent(objectParam));
+  const { ticketId, arrayParam, travellerParam } = useParams();
   const selectSeat = JSON.parse(decodeURIComponent(arrayParam));
   const travellerInfo = JSON.parse(decodeURIComponent(travellerParam));
 
@@ -64,6 +65,13 @@ const Payment = () => {
   function mpitesanCloseHandler() {
     setMpitesan(false)
   }
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchTicketByTicketId(ticketId));
+  }, [dispatch, ticketId]);
+
+  const ticket = useSelector(getTicket);
 
   const orderRequest = {
     amount:ticket.price * selectSeat.length,
@@ -150,7 +158,7 @@ const Payment = () => {
 
                   <tr>
                     <td>Route</td>
-                    <td>{`${ticket.route?.startLocation} - ${ticket.route?.endLocation}`}</td>
+                    <td>{`${ticket.startLocation} - ${ticket.endLocation}`}</td>
                   </tr>
                   <tr>
                     <td>Departure Time</td>

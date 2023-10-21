@@ -5,11 +5,12 @@ import { fetchAllRoute,getAllRoute } from "../routes/routeSlice";
 import { createTicket } from "./ticketSlice";
 import { fetchAllBus, getAllBus } from "../bus/busSlice";
 import { useNavigate } from "react-router-dom";
+import { getToken } from "../auths/authSlice";
 
 const TicketForm = () => {
   
   const [imageURL,setImageURL] = useState("")
-  const [typeName,setTypeName] = useState("Scania Standard")
+  const [typeName,setTypeName] = useState("Scania VIP")
   const [price,setPrice] = useState(0.0)
   // const [depature,setDepature] = useState("")
   const [startDateTime,setStartDateTime] = useState("")
@@ -36,9 +37,13 @@ const TicketForm = () => {
 
   const dispatch = useDispatch()
 
+  const token = useSelector(getToken)
+
   useEffect(()=>{
-    dispatch(fetchAllBus())
-  },[dispatch])
+    dispatch(fetchAllBus({
+      token:String(token)
+    }))
+  },[dispatch,token])
 
   const buses = useSelector(getAllBus)
   const typeNames = buses.map((bus) => bus.typeName)
@@ -50,8 +55,10 @@ const TicketForm = () => {
   </option>)
 
   useEffect(()=>{
-    dispatch(fetchAllRoute())
-  },[dispatch])
+    dispatch(fetchAllRoute({
+      token:String(token)
+    }))
+  },[dispatch,token])
 
   const routes = useSelector(getAllRoute)
   const bindRoutes = routes.map((route)=>route.startLocation+"-"+route.endLocation)
@@ -101,7 +108,8 @@ const depature = startDateTime.slice(0,10)
           startLocation,
           endLocation
         }
-      }
+      },
+      token :String(token)
       
       }))
       setRequestStatus("idle")

@@ -7,14 +7,16 @@ import OrderList from './OrderList'
 const Orders = () => {
     const { ticketId } = useParams()
     const status = useSelector(getStatus)
+    console.log(ticketId);
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (status === 'idle') {
-            dispatch(fetchOrdersByTicketId(ticketId))
-        }
-    },[status,dispatch,ticketId])
+       
+            dispatch(fetchOrdersByTicketId(
+                ticketId))
+        
+    },[ticketId,dispatch])
 
     const orders = useSelector(getOrders)
     const error = useSelector(getError)
