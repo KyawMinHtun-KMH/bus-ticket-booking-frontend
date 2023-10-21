@@ -1,11 +1,12 @@
  /* * {
+    
+} */
+
+.body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
-} */
-
-.body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
@@ -225,17 +226,17 @@
     .container1::before {
         display: none;
     }
-    form {
+    .form1 {
         width: 80%;
     }
-    form.sign-up-form {
+    .form1.sign-up-form {
         display: none;
     }
-    .container1.sign-up-mode2 form.sign-up-form {
+    .container1.sign-up-mode2 .form1.sign-up-form {
         display: flex;
         opacity: 1;
     }
-    .container1.sign-up-mode2 form.sign-in-form {
+    .container1.sign-up-mode2 .form1.sign-in-form {
         display: none;
     }
     .panels-container {
