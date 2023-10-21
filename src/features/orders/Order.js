@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchConfirmOrder, fetchDeleteOrder } from "./orderSlice";
 import { useNavigate } from "react-router-dom";
+import { getToken } from "../auths/authSlice";
 
 const Order = ({ order,isConfirm }) => {
     console.log(order);
@@ -54,12 +55,16 @@ const Order = ({ order,isConfirm }) => {
 const navigate = useNavigate()
 const dispatch = useDispatch();
 const [requestStatus,setRequestStatus] = useState('idle')
+const token = useSelector(getToken)
 
 const onAccept = (e) => {
     e.preventDefault();
     if (requestStatus === 'idle') {
     setRequestStatus('pending')
-    dispatch(fetchConfirmOrder(order.id))
+    dispatch(fetchConfirmOrder({
+      orderId:order.id,
+      token:String(token)
+    }))
     }
     setRequestStatus('idle')
     navigate(`/ticketOrders/${order.ticket.id}`)
@@ -69,7 +74,10 @@ const onReject = (e) => {
     e.preventDefault();
     if (requestStatus === 'idle') {
     setRequestStatus('pending')
-    dispatch(fetchDeleteOrder(order.id))
+    dispatch(fetchDeleteOrder({
+      orderId:order.id,
+      token:String(token)
+    }))
     }
     setRequestStatus('idle')
     navigate(`/ticketOrders/${order.ticket.id}`)

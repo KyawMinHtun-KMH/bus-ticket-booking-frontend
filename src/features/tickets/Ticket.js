@@ -2,30 +2,31 @@ import React, { useEffect } from "react";
 import Card from "../../components/ui/Card";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { getStatus } from "./ticketSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrdersByTicketId, getOrders } from "../orders/orderSlice";
 import { getRoles } from "../auths/authSlice";
 
 const Ticket = ({ ticket }) => {
   console.log(ticket);
-
+  console.log(ticket.orders)
   const { seatAmount } = useParams();
-  const status = useSelector(getStatus);
 
   const dispatch = useDispatch();
+  console.log(ticket.id);
+  
 
   useEffect(() => {
-    if (status === "idle") {
+    
+      console.log(ticket.id)
       dispatch(fetchOrdersByTicketId(ticket.id));
-    }
-  }, [status, dispatch, ticket.id]);
+
+    
+  }, [ dispatch, ticket.id]);
 
   const orders = useSelector(getOrders);
   console.log(orders);
 
   const role = useSelector(getRoles)
-  console.log(role);
 
   function dateTimeToTime(dateTime) {
     const date = new Date(dateTime);
@@ -78,27 +79,36 @@ const Ticket = ({ ticket }) => {
   const totalPrice = seatAmount * ticket.price;
   console.log(orders.length);
 
-  function adminButton(orders,role) {
-    const length = orders.length;
-    if (Array.isArray(role) && length === 0 && role.includes("ROLE_ADMIN")) {
+  function adminButton(role) {
+    
+    if (Array.isArray(role) && role.includes("ROLE_ADMIN")) {
       return (
+        <>
         <Link
           to={`/ticket/update/${ticket?.id}`}
           className="btn btn-primary mt-2"
         >
           <span className="text-my text-bold">Update</span>
         </Link>
+         <Link
+         to={`/ticketOrders/${ticket?.id}`}
+         className="btn btn-primary mt-2"
+       >
+         <span className="text-my text-bold">Orders</span>
+       </Link>
+       </>
       );
-    } if (Array.isArray(role) && length > 0 && role.includes("ROLE_ADMIN")) {
-      return (
-        <Link
-          to={`/ticketOrders/${ticket?.id}`}
-          className="btn btn-primary mt-2"
-        >
-          <span className="text-my text-bold">Orders</span>
-        </Link>
-      );
-    }
+     }
+    // if (Array.isArray(role) && length > 0 && role.includes("ROLE_ADMIN")) {
+    //   return (
+    //     <Link
+    //       to={`/ticketOrders/${ticket?.id}`}
+    //       className="btn btn-primary mt-2"
+    //     >
+    //       <span className="text-my text-bold">Orders</span>
+    //     </Link>
+    //   );
+    // }
     else
     return (
       <Link
@@ -150,7 +160,7 @@ const Ticket = ({ ticket }) => {
             )}, ${dateTimeToTime(ticket.endDateTime)}`}</p>
             {userTicket}
             {/* <button onClick={canUpdate} className='btn btn-primary'>Update</button> */}
-            {adminButton(orders,role)}
+            {adminButton(role)}
           </div>
          
         </div>

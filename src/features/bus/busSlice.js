@@ -2,9 +2,15 @@ import { createSlice,createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 import { busPath } from "../config/pathConfig"
 
-export const fetchAllBus = createAsyncThunk("fetchAllBus",async()=>{
+export const fetchAllBus = createAsyncThunk("fetchAllBus",async(data)=>{
     try{
-    const response = await axios.get(`${busPath}/all`)
+    const response = await axios.get(`${busPath}/all`,
+    {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization":data.token
+        },
+      })
     return {
         statusCode : response.status,
         data : response.data
@@ -14,11 +20,12 @@ export const fetchAllBus = createAsyncThunk("fetchAllBus",async()=>{
     }
 })
 
-export const createBus = createAsyncThunk("createBus",async(bus)=>{
+export const createBus = createAsyncThunk("createBus",async(data)=>{
     try{
-    const response = await axios.post(`${busPath}/create`,bus,{
+    const response = await axios.post(`${busPath}/create`,data.bus,{
         headers : {
-            'Content-Type' : 'application/json'
+            'Content-Type' : 'application/json',
+            'Authorization' : data.token
         }
     })
     return {

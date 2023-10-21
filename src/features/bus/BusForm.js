@@ -1,6 +1,7 @@
 import { useState,React } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createBus } from './busSlice'
+import { getToken } from '../auths/authSlice'
 
 const BusForm = () => {
     const [name,setName] = useState("")
@@ -17,16 +18,20 @@ const BusForm = () => {
     const capacity = type === "VIP" ? 27 : type === "Standard" ? 45 : 42
 
     const dispatch = useDispatch()
+    const token = useSelector(getToken)
 
     const onSubmit = (e) =>{
         e.preventDefault()
         if(canCreate){
             setRequestStatus("pending")
             dispatch(createBus({
+              bus:{
                 typeName,
                 capacity
-            }))
-            
+              },
+              token :String(token)
+            }
+            ))  
             setName("")
             setType("")
             setRequestStatus("idle")
