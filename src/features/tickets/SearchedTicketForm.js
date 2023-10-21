@@ -105,7 +105,7 @@ const SearchedTicketForm = () => {
   
   <div className="col-md-3 col-6">
     
-  <p className="text-white">StartLocation</p>
+  <p className="text-dark">StartLocation</p>
     <Select 
       value={startLocation}
       onChange={onStartLocationChange}
@@ -118,7 +118,7 @@ const SearchedTicketForm = () => {
   
   
   <div className="col-md-3 col-6">
-  <p className="text-white">EndLocation</p>
+  <p className="text-dark">EndLocation</p>
   <Select 
       value={endLocation}
       onChange={onEndLocationChange}
@@ -129,12 +129,12 @@ const SearchedTicketForm = () => {
   </div>
 
   <div className="col-md-2 col-6">
-    <label htmlFor="Depature" className="form-label text-white pb-2">Depature</label>
+    <label htmlFor="Depature" className="form-label text-dark pb-2">Depature</label>
     <input type="date" className="form-control" id="Depature" value={depature} onChange={onDepatureChange} min={formattedDate} required/>
   </div>
 
   <div className="col-lg-2 col-6">
-    <p className="text-white">SeatAmount</p>
+    <p className="text-dark">SeatAmount</p>
     <div className='d-flex justify-content-center'>
       <button onClick={minusSeatAmount} className="btn btn-light shadow-none border px-2" id="decrement-counter" name="decrement-counter" disabled="">
         <i className="fa fa-minus" id="decrement-icon" style={{color: 'blue'}}></i>

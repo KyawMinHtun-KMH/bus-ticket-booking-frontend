@@ -7,11 +7,12 @@ import { signin } from '../auths/authSlice'
 
 
 const Signin = () => {
-
+  const [showPassword,setShowPassword] = useState(false)
   const [username,setUsername] = useState('')
   const [password,setPassword] = useState('')
   const [requestStatus,setRequestStatus] = useState('idle')
 
+  const onPasswordVisibilty = () => setShowPassword(!showPassword)
   const onUsernameChange = e => setUsername(e.target.value)
   const onPasswordChange = e => setPassword(e.target.value)
 
@@ -39,19 +40,53 @@ const Signin = () => {
 
   return (
     <Card>
-      <form className={classes.form}>
+      {/* <form className={classes.form}>
         <div className={classes.control}>
           <label htmlFor="email">Email</label>
           <input type="email" id="email" required onChange={onUsernameChange} value={username} />
         </div>
         <div className={classes.control}>
           <label htmlFor="password">Password</label>
-          <input type="password" id="password" required onChange={onPasswordChange} value={password} />
+          <input type={showPassword?"text":"password"} class="form-control" id="password" aria-describedby="button-addon2" required onChange={onPasswordChange} value={password} />
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" onClick={onPasswordVisibilty}>{showPassword?'Hide':'Show'}</button>
+        
         </div>
         <div className={classes.actions}>
           <button onClick={onSubmit} disabled={!canLogin}>Login</button>
         </div>
-      </form>
+      </form> */}
+      <div className="form-group">
+      <div className={classes.control}>
+          <label htmlFor="email">Email</label>
+          <input type="email" id="email" required onChange={onUsernameChange} value={username} />
+        </div>
+      <label>Password</label>
+      <div className="input-group">
+        <input
+          type={showPassword ? 'text' : 'password'}
+          className="form-control"
+          value={password}
+          onChange={onPasswordChange}
+        />
+        <div className="input-group-append">
+          
+        <span
+            className="input-group-text" id={classes.eye}
+            onClick={onPasswordVisibilty}
+          >
+            {showPassword ? 
+              <i className="fa fa-eye-slash"></i>
+             : 
+              <i className="fa fa-eye"></i>
+            }
+          </span>
+          
+        </div>
+      </div>
+      <div className={classes.actions}>
+          <button onClick={onSubmit} disabled={!canLogin}>Login</button>
+        </div>
+    </div>
       <Link to='/user/register'>No have an account?register here</Link>
     </Card>
   )
