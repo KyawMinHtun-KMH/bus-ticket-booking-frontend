@@ -1,61 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchConfirmOrder, fetchDeleteOrder } from "./orderSlice";
-import { useNavigate } from "react-router-dom";
 import { getToken } from "../auths/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Order = ({ order,isConfirm }) => {
-    console.log(order);
-//   function dateTimeToTime(dateTime) {
-//     const date = new Date(dateTime);
-//     const hours = date.getHours();
-//     const minutes = date.getMinutes();
-//     let hour = 0;
-//     if (hours > 12) {
-//       hour = hours - 12;
-//     } else {
-//       hour = hours;
-//     }
+    
 
-//     const dayNight = hours < 12 ? "AM" : "PM";
-
-//     return `${hour}:${minutes} ${dayNight}`;
-//   }
-
-//   function getMonthName(monthNumber) {
-//     const monthNames = [
-//       "January",
-//       "February",
-//       "March",
-//       "April",
-//       "May",
-//       "June",
-//       "July",
-//       "August",
-//       "September",
-//       "October",
-//       "November",
-//       "December",
-//     ];
-
-//     if (monthNumber >= 0 && monthNumber <= 11) {
-//       return monthNames[monthNumber];
-//     } else {
-//       return "Invalid Month";
-//     }
-//   }
-
-//   function dateTimeToDate(dateTime) {
-//     const date = new Date(dateTime);
-//     const year = date.getFullYear();
-//     const month = getMonthName(date.getMonth());
-//     const onlyDate = date.getDate();
-//     return `${month} ${onlyDate}, ${year}`;
-//   }
-const navigate = useNavigate()
 const dispatch = useDispatch();
 const [requestStatus,setRequestStatus] = useState('idle')
 const token = useSelector(getToken)
+const navigate = useNavigate()
 
 const onAccept = (e) => {
     e.preventDefault();
@@ -179,8 +134,10 @@ function requestOrder(order) {
         </div>
       </div>
     )}
-    return null
+    
 }
+
+
 
 function confirmOrder(order) {
     if (order.status) {
