@@ -11,7 +11,7 @@ const PaymentUi = () => {
     <div className='container my-5'>
         <div className='row my-5'>
             <div className='col-12 text-center'>
-                <h3>We Accept</h3>
+                <h3 className={classes.h}>We Accept</h3>
             </div>
         </div>
         <div className='row mb-4'>
