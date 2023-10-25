@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux'
 import { signin } from '../auths/authSlice'
 
 
+
+
 const Signin = () => {
   const [showPassword,setShowPassword] = useState(false)
   const [username,setUsername] = useState('')
@@ -70,16 +72,18 @@ const Signin = () => {
         />
         <div className="input-group-append">
           
-        <span
+        <button
             className="input-group-text" id={classes.eye}
             onClick={onPasswordVisibilty}
           >
-            {showPassword ? 
-              <i className="fa fa-eye-slash"></i>
-             : 
-              <i className="fa fa-eye"></i>
+            {showPassword ? (
+              <p><i className="fa fa-eye-slash"></i></p>
+              )
+             :( 
+             <p><i className="fa fa-eye"></i></p> 
+              )
             }
-          </span>
+          </button>
           
         </div>
       </div>
