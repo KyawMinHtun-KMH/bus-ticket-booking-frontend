@@ -86,7 +86,7 @@ const Ticket = ({ ticket }) => {
         <>
         <Link
           to={`/ticket/update/${ticket?.id}`}
-          className="btn btn-primary mt-2"
+          className="btn btn-primary mt-2 me-3"
         >
           <span className="text-my text-bold">Update</span>
         </Link>

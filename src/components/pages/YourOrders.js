@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchOrdersByUser, getError, getOrders, getStatus } from '../../features/orders/orderSlice'
+import { fetchOrdersByUser, getError, getOrder, getStatus } from '../../features/orders/orderSlice'
 import { useEffect } from 'react'
 import UserOrderList from '../../features/orders/UserOrderList'
 import { getToken } from '../../features/auths/authSlice'
@@ -19,7 +19,7 @@ const YourOrders = () => {
         
     },[dispatch,token])
 
-    const orders = useSelector(getOrders)
+    const orders = useSelector(getOrder)
     const error = useSelector(getError)
 
     
