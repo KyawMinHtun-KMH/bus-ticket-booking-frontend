@@ -1,10 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { orderPath } from "../config/pathConfig";
+import { emailPath, orderPath } from "../config/pathConfig";
 
 export const fetchDeleteOrder = createAsyncThunk("deleteOrder",
 async (data) => {
   try {
+    const rejectMailResponse = await axios.post(`${emailPath}/reject/${data.orderId}`,null,{
+      headers: {
+        "Authorization":data.token
+      },
+    })
+    if(rejectMailResponse.status === 200){
+
     const response = await axios.delete(`${orderPath}/${data.orderId}/delete`,
     {
       headers: {
@@ -12,10 +19,12 @@ async (data) => {
         "Authorization":data.token
       },
     });
+    
     return {
       statusCode: response.status,
       orderId: response.data,
     };
+  }
   } catch (error) {
     console.error(error);
   }
@@ -25,6 +34,13 @@ async (data) => {
 export const fetchConfirmOrder = createAsyncThunk("confirmOrder",
 async (data) => {
   try {
+    const confirmMailResponse = await axios.post(`${emailPath}/confirm/${data.orderId}`,null,{
+      headers: {
+        "Authorization":data.token
+      },
+    })
+
+    if(confirmMailResponse.status === 200){
     const response = await axios.put(`${orderPath}/${data.orderId}/update`,null,
     {
       headers: {
@@ -36,6 +52,7 @@ async (data) => {
       statusCode: response.status,
       data: response.data,
     };
+  }
   } catch (error) {
     console.error(error);
   }
@@ -223,5 +240,6 @@ export default orderSlice.reducer;
 export const getOrders = (state) => state.orders.orders;
 export const getStatus = (state) => state.orders.status;
 export const getError = (state) => state.orders.error;
+export const getOrder = (state) => state.orders.order;
 // export const getOrderById = (state, orderId) =>
 //   state.orders.orders.find((order) => order.id === Number(orderId));
