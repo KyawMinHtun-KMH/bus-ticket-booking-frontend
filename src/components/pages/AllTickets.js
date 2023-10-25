@@ -12,7 +12,6 @@ const AllTickets = () => {
     const tickets = useSelector(getAllTickets)
     const token = useSelector(getToken)
     
-    
     useEffect(() => {
         if (status === 'idle') {
             dispatch(fetchAllTickets(

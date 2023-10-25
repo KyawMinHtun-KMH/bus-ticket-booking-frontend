@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getToken, signin, signup } from '../auths/authSlice';
 import { getLoginStatus } from '../auths/authSlice';
+import { changeStatus } from '../tickets/ticketSlice';
 
 function SigninSignup() {
   const [isSignUpMode, setSignUpMode] = useState(false);
@@ -64,6 +65,8 @@ function SigninSignup() {
         password
 
       }))
+
+      dispatch(changeStatus("idle"))
       if(token !== ''){
         setUserExisted("email is already existed")
       }
