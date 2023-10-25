@@ -50,7 +50,7 @@ const MainNavigation = () => {
   if (Array.isArray(role) && role.includes("ROLE_USER")) {
     userNav = (
       <li className="nav-item">
-      <Link className="nav-link text-white" to="/orders">Your Orders</Link>
+      <Link className="nav-link text-white" to="/orders">Orders</Link>
     </li>
   )
   }
