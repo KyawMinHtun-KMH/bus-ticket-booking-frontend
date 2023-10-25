@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import styles from './SigninSignup.module.css'; // Import your CSS module
 import signinImage from './signin.jpg';
 import signupImage from './signup.jpg'; // Import the signup image
+import eyeClose from './hide_8105914.png'
+import eyeOpen from './view_7748016 (1).png'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { signin, signup } from '../auths/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getToken, signin, signup } from '../auths/authSlice';
+import { getLoginStatus } from '../auths/authSlice';
 
 function SigninSignup() {
   const [isSignUpMode, setSignUpMode] = useState(false);
+  
 
   const toggleMode = (mode) => {
     setSignUpMode(mode);
   };
 
+  const [incorrect,setIncorrect] = useState('')
+  const [userExisted,setUserExisted] = useState('')
+  const [showPassword,setShowPassword] = useState(false)
   const [firstName,setFirstName] = useState('')
   const [lastName,setLastName] = useState('')
   const [fullname,setFullname] = useState('')
@@ -20,6 +27,7 @@ function SigninSignup() {
   const [password,setPassword] = useState('')
   const [requestStatus,setRequestStatus] = useState('idle')
 
+  const onPasswordVisibilty = () => {setShowPassword(!showPassword)}
   const onFirstNameChange = e => setFirstName(e.target.value)
   const onLastNameChange = e => setLastName(e.target.value)
   const onFullnameChange = e => setFullname(e.target.value)
@@ -33,6 +41,16 @@ function SigninSignup() {
   const from = location.state?.from?.pathname || "/"
 
   const canSignup = [firstName,lastName,fullname,username,password].every(Boolean) && requestStatus === 'idle'
+  const status = useSelector(getLoginStatus)
+  const token = useSelector(getToken)
+  useEffect(() => {
+  
+    if (status === true) {
+      navigate(from, { replace: true });
+    }
+  },[status,from,navigate]);
+
+
 
   const onSignup = (e) => {
     e.preventDefault()
@@ -46,13 +64,30 @@ function SigninSignup() {
         password
 
       }))
+      if(token !== ''){
+        setUserExisted("email is already existed")
+      }
 
-      navigate(from,{replace : true})
+      // navigate(from,{replace : true})
       setRequestStatus('idle')
     }
 }
 
 const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
+
+
+
+
+
+useEffect(()=>{
+  if(token !== ''){
+    setIncorrect("email or password is incorrect !")
+    }
+},[token])
+
+
+
+
 
   const onSignin = (e) => {
     e.preventDefault()
@@ -62,9 +97,11 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
         username,
         password
       }))
-
-      navigate(from,{replace : true})
       setRequestStatus('idle')
+      console.log(status)
+      setPassword('')
+      
+      
     }
 }
 
@@ -83,7 +120,17 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
           </div>
           <div className={styles['input-field']}>
             <i className={"fas fa-lock " + styles.icon} />
-            <input type="password" placeholder="Password" required onChange={onPasswordChange} value={password} />
+            <input type={showPassword ? 'text' : 'password'} placeholder="Password" required onChange={onPasswordChange} value={password} />
+            <span className='pe-3' onClick={ onPasswordVisibilty }>
+            {showPassword ? 
+              <img src={eyeClose} alt='eyeClose'/>
+             :
+              <img src={eyeOpen} alt='eyeOpen'/>
+            } 
+            </span>
+          </div>
+          <div>
+             {incorrect && <p className="text-danger">{incorrect}</p>}
           </div>
           <input type="submit" value="Login" className={styles.btn1} onClick={onSignin} disabled={!canLogin}/>
           <p className={styles['account-text']}>
@@ -109,6 +156,7 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
           <div className={styles['input-field']}>
             <i className={"fas fa-user " + styles.icon}/>
             <input type="text" placeholder="Fullname" required onChange={onFullnameChange} value={fullname} />
+            
           </div>
           <div className={styles['input-field']}>
             <i className={"fas fa-envelope " + styles.icon}/>
@@ -116,7 +164,17 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
           </div>
           <div className={styles['input-field']}>
             <i className={"fas fa-lock " + styles.icon}/>
-            <input type="password" placeholder="Password" required onChange={onPasswordChange} value={password} />
+            <input type={showPassword ? 'text' : 'password'} placeholder="Password" required onChange={onPasswordChange} value={password} />
+            <span className='pe-3' onClick={ onPasswordVisibilty }>
+            {showPassword ? 
+              <img src={eyeClose} alt='eyeClose'/>
+             :
+              <img src={eyeOpen} alt='eyeOpen'/>
+            } 
+            </span>
+          </div>
+          <div>
+             {userExisted && <p className="text-danger">{userExisted}</p>}
           </div>
           <input type="submit" value="Sign up" className={styles.btn1} onClick={onSignup} disabled={!canSignup}/>
           <p className={styles['account-text']}>

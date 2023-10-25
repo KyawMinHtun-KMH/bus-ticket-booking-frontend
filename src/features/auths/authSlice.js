@@ -61,6 +61,7 @@ const authSlice = createSlice({
     builder
       .addCase(signin.fulfilled, (state, action) => {
         const response = action.payload;
+        
 
         if (response?.statusCode) {
           const { statusCode, data } = response;
@@ -81,7 +82,8 @@ const authSlice = createSlice({
         const response = action.payload;
 
         if (response?.statusCode) {
-          const { statusCode, data } = response;
+          const { statusCode, data,error } = response;
+          console.log(error)
           if (statusCode === 200) {
             state.loginStatus = data.success ? true : false;
             state.user = data.user;
