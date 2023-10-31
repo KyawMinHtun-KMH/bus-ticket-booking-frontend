@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ticketPath } from "../config/pathConfig";
+import { imagePath, ticketPath } from "../config/pathConfig";
 import axios from "axios";
 
 export const createTicket = createAsyncThunk("createTicket", async (data) => {
@@ -14,6 +14,20 @@ export const createTicket = createAsyncThunk("createTicket", async (data) => {
         },
       }
     );
+
+    if(response.status === 201){
+      const uploadResponse = await axios.post(`${imagePath}upload/${response.data.id}`,data.formData,{
+        headers : {
+          'Content-Type' : 'multipart/form-data',
+          'Authorization' : data.token
+        }
+      })
+      if(uploadResponse.status === 200){
+        console.log(uploadResponse.data)
+      }else{
+        console.log('fail to upload')
+      }
+    }
     
     return {
       statusCode: response.status,
@@ -27,6 +41,7 @@ export const createTicket = createAsyncThunk("createTicket", async (data) => {
 
 export const updateTicket = createAsyncThunk("updateTicket", async (data) => {
    try {
+
     const response = await axios.put(
       `${ticketPath}/update`,
       data.ticketRequest,
@@ -37,6 +52,21 @@ export const updateTicket = createAsyncThunk("updateTicket", async (data) => {
         },
       }
     );
+  //   if(response.status === 200){
+  //     if(data.formData){
+  //   const uploadResponse = await axios.post(`${imagePath}upload/${data.ticketRequest.ticket.id}`,data.formData,{
+  //     headers : {
+  //       'Content-Type' : 'multipart/form-data',
+  //       'Authorization' : data.token
+  //     }
+  //   })
+  //   if(uploadResponse.status === 200){
+  //     console.log(uploadResponse.data)
+  //   }else{
+  //     console.log('fail to upload')
+  //   }
+  // }
+  // }
     
     return {
       statusCode: response.status,
@@ -47,6 +77,20 @@ export const updateTicket = createAsyncThunk("updateTicket", async (data) => {
     console.error(error);
   }
 });
+
+export const changeImage = createAsyncThunk("changeImage",async(data) =>{
+  const response = await axios.post(`${imagePath}upload/${data.id}`,data.formData,{
+    headers : {
+      'Content-Type' : 'multipart/form-data',
+      'Authorization':data.token
+    }
+  })
+  if(response.status === 200){
+    console.log("image upload is successful")
+  }else{
+    console.log("upload failed")
+  }
+})
 
 
 

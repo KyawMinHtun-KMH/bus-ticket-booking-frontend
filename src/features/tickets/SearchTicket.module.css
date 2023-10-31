@@ -12,3 +12,14 @@
 #searchbutton{
     padding: 32px;
 }
+#mmbusform{
+    top: 200px;
+    width: 88%;
+}
+#citem{
+    height: 480px;
+}
+#cimg{
+    height: 100%;
+    object-fit: cover;
+}

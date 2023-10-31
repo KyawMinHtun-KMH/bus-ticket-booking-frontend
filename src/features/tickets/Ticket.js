@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import Card from "../../components/ui/Card";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrdersByTicketId, getOrders } from "../orders/orderSlice";
 import { getRoles } from "../auths/authSlice";
+import { imagePath } from "../config/pathConfig";
 
 const Ticket = ({ ticket }) => {
   console.log(ticket);
@@ -130,25 +130,19 @@ const Ticket = ({ ticket }) => {
       </>
     )
   } else userTicket = (
-    <h4>{`${ticket.price} MMK`}</h4>
+    <h4 className="text-success">{`${ticket.price} MMK`}</h4>
   )
   
   return (
-    
-    <Card>
-      <li>
-        <div className="row">
-          <div className="col-md-7">
-            <img
-              // src={`${imagePath}${ticket.id}.jpg`}
-              src={`${ticket.imageURL}`}
-              alt="ticket.jpg"
-              style={{ width: "500px", height: "300px" }}
-            />
-          </div>
-
-          <div className="col-md-5 col-12 ms-auto">
-            <h4>{`${dateTimeToTime(ticket.startDateTime)} - ${
+    <div className="container">
+    <div class="card my-3" style={{maxWidth: "100%"}}>
+  <div class="row g-0">
+    <div class="col-lg-7">
+      <img src={`${imagePath}${ticket.image}`} className="img-fluid rounded-start" alt="..." style={{ width: "500px", height: "300px",objectFit:"cover"}}/>
+    </div>
+    <div class="col-lg-5">
+      <div class="card-body">
+        <h4>{`${dateTimeToTime(ticket.startDateTime)} - ${
               ticket.bus.typeName
             }`}</h4>
             <h6>{`${ticket.route.startLocation} - ${ticket.route.endLocation}`}</h6>
@@ -161,11 +155,11 @@ const Ticket = ({ ticket }) => {
             {userTicket}
             {/* <button onClick={canUpdate} className='btn btn-primary'>Update</button> */}
             {adminButton(role)}
-          </div>
-         
-        </div>
-      </li>
-    </Card>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
   );
 };
 

@@ -6,7 +6,7 @@ import eyeClose from './hide_8105914.png'
 import eyeOpen from './view_7748016 (1).png'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getToken, signin, signup } from '../auths/authSlice';
+import { getError, getToken, signin, signup } from '../auths/authSlice';
 import { getLoginStatus } from '../auths/authSlice';
 import { changeStatus } from '../tickets/ticketSlice';
 
@@ -19,7 +19,7 @@ function SigninSignup() {
   };
 
   const [incorrect,setIncorrect] = useState('')
-  const [userExisted,setUserExisted] = useState('')
+  // const [userExisted,setUserExisted] = useState('')
   const [showPassword,setShowPassword] = useState(false)
   const [firstName,setFirstName] = useState('')
   const [lastName,setLastName] = useState('')
@@ -44,14 +44,16 @@ function SigninSignup() {
   const canSignup = [firstName,lastName,fullname,username,password].every(Boolean) && requestStatus === 'idle'
   const status = useSelector(getLoginStatus)
   const token = useSelector(getToken)
-  useEffect(() => {
+
   
+  useEffect(() => {
     if (status === true) {
       navigate(from, { replace: true });
     }
   },[status,from,navigate]);
 
-
+  const errorMessage= useSelector(getError)
+  
 
   const onSignup = (e) => {
     e.preventDefault()
@@ -67,9 +69,7 @@ function SigninSignup() {
       }))
 
       dispatch(changeStatus("idle"))
-      if(token !== ''){
-        setUserExisted("email is already existed")
-      }
+      
 
       // navigate(from,{replace : true})
       setRequestStatus('idle')
@@ -100,6 +100,7 @@ useEffect(()=>{
         username,
         password
       }))
+      dispatch(changeStatus("idle"))
       setRequestStatus('idle')
       console.log(status)
       setPassword('')
@@ -133,7 +134,7 @@ useEffect(()=>{
             </span>
           </div>
           <div>
-             {incorrect && <p className="text-danger">{incorrect}</p>}
+             {incorrect && <p className="text-danger"><small>{incorrect}</small></p>}
           </div>
           <input type="submit" value="Login" className={styles.btn1} onClick={onSignin} disabled={!canLogin}/>
           <p className={styles['account-text']}>
@@ -177,7 +178,7 @@ useEffect(()=>{
             </span>
           </div>
           <div>
-             {userExisted && <p className="text-danger">{userExisted}</p>}
+             {errorMessage && <p className="text-danger"><small>{errorMessage}</small></p>}
           </div>
           <input type="submit" value="Sign up" className={styles.btn1} onClick={onSignup} disabled={!canSignup}/>
           <p className={styles['account-text']}>

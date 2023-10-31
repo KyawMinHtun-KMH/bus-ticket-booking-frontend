@@ -35,6 +35,14 @@ export const signup = createAsyncThunk("signup", async (user) => {
     };
   } catch (error) {
     console.error(error);
+    // if(error.response.status === 400){
+    //   console.log(error.response.data.username)
+    // }
+    return {
+      statusCode : error.response.status,
+      data : error.response.data.username
+    }
+
   }
 });
 
@@ -44,6 +52,7 @@ const initialState = {
   },
   token : "",
   roles: [],
+  error : ""
 };
 
 const authSlice = createSlice({
@@ -80,20 +89,22 @@ const authSlice = createSlice({
 
       .addCase(signup.fulfilled, (state, action) => {
         const response = action.payload;
-
+        console.log(response.statusCode)
         if (response?.statusCode) {
-          const { statusCode, data,error } = response;
-          console.log(error)
+          const { statusCode, data } = response;
+          console.log("ha ha")
           if (statusCode === 200) {
             state.loginStatus = data.success ? true : false;
             state.user = data.user;
             state.roles = data.roles;
             state.token = data.token;
+            state.error = "";
             console.log(data.user);
             console.log(data.roles);
             console.log(data.success);
           } else {
-            console.log("login failed due to server");
+            console.log(data);
+            state.error = data
           }
         } else {
           console.log("login failed!");
@@ -108,3 +119,4 @@ export const getUser = (state) => state.auths.user;
 export const getRoles = (state) => state.auths.roles;
 export const getToken = (state) => state.auths.token;
 export const { logout } = authSlice.actions
+export const getError = (state) =>state.auths.error
