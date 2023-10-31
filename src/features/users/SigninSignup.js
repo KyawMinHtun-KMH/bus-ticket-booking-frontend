@@ -1,25 +1,36 @@
-import React, { useState } from 'react';
-import styles from './SigninSignup.module.css'; // Import your CSS module
+import React, { useState,useEffect } from 'react';
+import styles from './SigninSignup.module.css'; 
 import signinImage from './signin.jpg';
-import signupImage from './signup.jpg'; // Import the signup image
+import signupImage from './signup.jpg';
+import eyeClose from './hide_8105914.png'
+import eyeOpen from './view_7748016 (1).png'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { signin, signup } from '../auths/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser, getCode, getToken, mailConfirm, signin } from '../auths/authSlice';
+import { getLoginStatus } from '../auths/authSlice';
+import { changeStatus } from '../tickets/ticketSlice';
 
 function SigninSignup() {
   const [isSignUpMode, setSignUpMode] = useState(false);
+  
 
   const toggleMode = (mode) => {
     setSignUpMode(mode);
   };
 
+  const [incorrect,setIncorrect] = useState('')
+  // const [userExisted,setUserExisted] = useState('')
+  const [showPassword,setShowPassword] = useState(false)
   const [firstName,setFirstName] = useState('')
   const [lastName,setLastName] = useState('')
   const [fullname,setFullname] = useState('')
   const [username,setUsername] = useState('')
   const [password,setPassword] = useState('')
   const [requestStatus,setRequestStatus] = useState('idle')
+  const [codeError, setCodeError] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
+  const onPasswordVisibilty = () => {setShowPassword(!showPassword)}
   const onFirstNameChange = e => setFirstName(e.target.value)
   const onLastNameChange = e => setLastName(e.target.value)
   const onFullnameChange = e => setFullname(e.target.value)
@@ -33,26 +44,51 @@ function SigninSignup() {
   const from = location.state?.from?.pathname || "/"
 
   const canSignup = [firstName,lastName,fullname,username,password].every(Boolean) && requestStatus === 'idle'
-
-  const onSignup = (e) => {
-    e.preventDefault()
-    if (canSignup) {
-      setRequestStatus('pending')
-      dispatch(signup({
-        firstName,
-        lastName,
-        fullname,
-        username,
-        password
-
-      }))
-
-      navigate(from,{replace : true})
-      setRequestStatus('idle')
+  const status = useSelector(getLoginStatus)
+  const token = useSelector(getToken)
+  const code = useSelector(getCode)
+  console.log(code);
+  useEffect(() => {
+  
+    if (status === true) {
+      navigate(from, { replace: true });
     }
-}
+  },[status,from,navigate]);
+
+  const vertifyMail = async (e) => {
+    e.preventDefault();
+    if (canSignup) {
+      setLoading(true); // Set loading state to true while waiting for response
+      dispatch(mailConfirm({
+        to: String(username)
+      }))
+        .then(() => setLoading(false)) // Once the response is received, set loading state back to false
+        .catch(() => setLoading(false)); // Handle error by setting loading state to false
+    }
+  };
+
+useEffect(() => {
+  if (String(code) === String(0)) {
+    setCodeError(true);
+  } else if (String(code) !== String(0) && code !== "") {
+    dispatch(addUser({ 
+      firstName,
+      lastName,
+      fullname,
+      username,
+      password
+    }));
+    navigate(`/user/login/confirm`);
+  }
+}, [code, navigate, firstName, lastName, fullname, username, password, dispatch]);
 
 const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
+
+useEffect(()=>{
+  if(token !== ''){
+    setIncorrect("email or password is incorrect !")
+    }
+},[token])
 
   const onSignin = (e) => {
     e.preventDefault()
@@ -62,13 +98,17 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
         username,
         password
       }))
-
-      navigate(from,{replace : true})
+      dispatch(changeStatus("idle"))
       setRequestStatus('idle')
+      console.log(status)
+      setPassword('')
+      
+      
     }
 }
 
   return (
+    <>
     <div className={styles.body}>
     <div className={`${styles.container1} ${isSignUpMode ? styles['sign-up-mode'] : ''}`}>
       <div className={styles['signin-signup1']}>
@@ -83,7 +123,17 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
           </div>
           <div className={styles['input-field']}>
             <i className={"fas fa-lock " + styles.icon} />
-            <input type="password" placeholder="Password" required onChange={onPasswordChange} value={password} />
+            <input type={showPassword ? 'text' : 'password'} placeholder="Password" required onChange={onPasswordChange} value={password} />
+            <span className='pe-3' onClick={ onPasswordVisibilty }>
+            {showPassword ? 
+              <img src={eyeClose} alt='eyeClose'/>
+             :
+              <img src={eyeOpen} alt='eyeOpen'/>
+            } 
+            </span>
+          </div>
+          <div>
+             {incorrect && <p className="text-danger">{incorrect}</p>}
           </div>
           <input type="submit" value="Login" className={styles.btn1} onClick={onSignin} disabled={!canLogin}/>
           <p className={styles['account-text']}>
@@ -92,6 +142,7 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
               Sign up
             </Link>
           </p>
+          
         </form>
         <form
           className={`${styles['form1']} ${isSignUpMode ? '' : styles.hidden}`}
@@ -109,6 +160,7 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
           <div className={styles['input-field']}>
             <i className={"fas fa-user " + styles.icon}/>
             <input type="text" placeholder="Fullname" required onChange={onFullnameChange} value={fullname} />
+            
           </div>
           <div className={styles['input-field']}>
             <i className={"fas fa-envelope " + styles.icon}/>
@@ -116,9 +168,35 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
           </div>
           <div className={styles['input-field']}>
             <i className={"fas fa-lock " + styles.icon}/>
-            <input type="password" placeholder="Password" required onChange={onPasswordChange} value={password} />
+            <input type={showPassword ? 'text' : 'password'} placeholder="Password" required onChange={onPasswordChange} value={password} />
+            <span className='pe-3' onClick={ onPasswordVisibilty }>
+            {showPassword ? 
+              <img src={eyeClose} alt='eyeClose'/>
+             :
+              <img src={eyeOpen} alt='eyeOpen'/>
+            } 
+            </span>
           </div>
-          <input type="submit" value="Sign up" className={styles.btn1} onClick={onSignup} disabled={!canSignup}/>
+          {codeError && <p className="text-danger">This email has already have and account. Please try again.</p>}
+          <button
+          type="submit"
+          className={`btn ${styles.btn1}`}
+          onClick={vertifyMail}
+          disabled={!canSignup}
+        >
+          {isLoading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Signing up...</span>
+            </>
+          ) : (
+            'Sign up'
+          )}
+        </button>
           <p className={styles['account-text']}>
             Already have an account?{' '}
             <Link to="#" onClick={() => toggleMode(false)} id="sign-in-btn2">
@@ -138,7 +216,9 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
             <button className={styles.btn1} onClick={() => toggleMode(false)} id="sign-in-btn">
               Sign in
             </button>
+            
           </div>
+          
           <img src={signinImage} alt="" className={styles.image} />
         </div>
         <div className={`${styles.panel} ${styles['right-panel']} ${isSignUpMode ? '' : styles['pointer-events-none']}`}>
@@ -157,6 +237,7 @@ const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
       </div>
     </div>
     </div>
+  </>
   );
 }
 

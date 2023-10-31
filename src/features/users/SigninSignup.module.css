@@ -96,6 +96,11 @@
     font-size: 18px;
 }
 
+#eye{
+    color: #666;
+    font-size: 18px;
+}
+
 .input-field input {
     flex: 5;
     background: none;

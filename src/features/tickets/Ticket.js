@@ -3,28 +3,21 @@ import Card from "../../components/ui/Card";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchOrdersByTicketId, getOrders } from "../orders/orderSlice";
+import { changeStatus, fetchOrdersByTicketId, getOrders } from "../orders/orderSlice";
 import { getRoles } from "../auths/authSlice";
 
 const Ticket = ({ ticket }) => {
-  console.log(ticket);
-  console.log(ticket.orders)
   const { seatAmount } = useParams();
 
   const dispatch = useDispatch();
-  console.log(ticket.id);
-  
+
+  dispatch(changeStatus('idle'))
 
   useEffect(() => {
-    
-      console.log(ticket.id)
       dispatch(fetchOrdersByTicketId(ticket.id));
-
-    
   }, [ dispatch, ticket.id]);
 
   const orders = useSelector(getOrders);
-  console.log(orders);
 
   const role = useSelector(getRoles)
 
@@ -99,16 +92,6 @@ const Ticket = ({ ticket }) => {
        </>
       );
      }
-    // if (Array.isArray(role) && length > 0 && role.includes("ROLE_ADMIN")) {
-    //   return (
-    //     <Link
-    //       to={`/ticketOrders/${ticket?.id}`}
-    //       className="btn btn-primary mt-2"
-    //     >
-    //       <span className="text-my text-bold">Orders</span>
-    //     </Link>
-    //   );
-    // }
     else
     return (
       <Link
@@ -134,13 +117,11 @@ const Ticket = ({ ticket }) => {
   )
   
   return (
-    
     <Card>
       <li>
         <div className="row">
           <div className="col-md-7">
             <img
-              // src={`${imagePath}${ticket.id}.jpg`}
               src={`${ticket.imageURL}`}
               alt="ticket.jpg"
               style={{ width: "500px", height: "300px" }}
@@ -159,7 +140,6 @@ const Ticket = ({ ticket }) => {
               ticket.endDateTime
             )}, ${dateTimeToTime(ticket.endDateTime)}`}</p>
             {userTicket}
-            {/* <button onClick={canUpdate} className='btn btn-primary'>Update</button> */}
             {adminButton(role)}
           </div>
          

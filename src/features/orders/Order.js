@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchConfirmOrder, fetchDeleteOrder } from "./orderSlice";
 import { getToken } from "../auths/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Order = ({ order,isConfirm }) => {
     
@@ -9,6 +10,7 @@ const Order = ({ order,isConfirm }) => {
 const dispatch = useDispatch();
 const [requestStatus,setRequestStatus] = useState('idle')
 const token = useSelector(getToken)
+const navigate = useNavigate()
 
 const onAccept = (e) => {
     e.preventDefault();
@@ -20,7 +22,7 @@ const onAccept = (e) => {
     }))
     }
     setRequestStatus('idle')
-    
+    navigate(`/ticketOrders/${order.ticket.id}`)
 }
 
 const onReject = (e) => {
@@ -33,7 +35,7 @@ const onReject = (e) => {
     }))
     }
     setRequestStatus('idle')
-    
+    navigate(`/ticketOrders/${order.ticket.id}`)
 }
 
 function requestOrder(order) {
@@ -227,13 +229,12 @@ function confirmOrder(order) {
         </div>
       </div>
     )}
-    return null
+  
 }
 
   return (
     <li>
-      {!isConfirm && requestOrder(order)}
-      {isConfirm && confirmOrder(order)}
+      {!isConfirm ? requestOrder(order) : confirmOrder(order)}
     </li>
   );
 };

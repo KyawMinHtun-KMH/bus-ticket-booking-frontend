@@ -153,7 +153,11 @@ const initialState = {
 const ticketSlice = createSlice({
   name: "ticketSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    changeStatus : (state, action)=>{
+      state.status = action.payload
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchAllTicketByRoute.fulfilled, (state, action) => {
@@ -295,5 +299,6 @@ export const getError = (state) => state.tickets.error;
 export const getAllSearchTickets = (state) => state.tickets.searchTickets;
 export const getTicketById = (state, ticketId) =>
   state.tickets.tickets.find((ticket) => ticket.id === Number(ticketId));
+export const { changeStatus } = ticketSlice.actions
 
 export const getTicket = (state) => state.tickets.ticket;
