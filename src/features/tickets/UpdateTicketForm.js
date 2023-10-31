@@ -7,6 +7,7 @@ import { fetchAllBus,getAllBus } from '../bus/busSlice'
 import { getAllRoute,fetchAllRoute } from '../routes/routeSlice'
 import { getToken } from '../auths/authSlice'
 import { fetchOrdersByTicketId, getOrders } from '../orders/orderSlice'
+import ChangeImage from './ChangeImage'
 
 
 const UpdateTicketForm = () => {
@@ -44,12 +45,6 @@ const UpdateTicketForm = () => {
       
       const today = new Date();
       const formattedDateTime = formatDateToISOStringWithoutSecondsAndMilliseconds(today);
-    
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1 and pad with 0 if needed
-      const day = String(today.getDate()).padStart(2, '0');
-    
-      const formattedDate = `${year}-${month}-${day}`;
 
       
 
@@ -167,7 +162,7 @@ const UpdateTicketForm = () => {
           
         </div>
       )
-      } else return (<div className='container mt-5 mb-5'>
+      } else return (<><div className='container mt-5 mb-5'>
       <div className="card">
         <div className="card-body">
         <h4 className="card-title text-success">Update ticket</h4>
@@ -250,7 +245,8 @@ const UpdateTicketForm = () => {
       </form>
       </div>
       </div>
-      </div>)
+      </div>
+      <ChangeImage /></>)
     }
 
   return (

@@ -229,13 +229,12 @@ function confirmOrder(order) {
         </div>
       </div>
     )}
-    return null
+  
 }
 
   return (
     <li>
-      {!isConfirm && requestOrder(order)}
-      {isConfirm && confirmOrder(order)}
+      {!isConfirm ? requestOrder(order) : confirmOrder(order)}
     </li>
   );
 };

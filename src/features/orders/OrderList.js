@@ -62,6 +62,8 @@ const OrderList = ({ orders }) => {
 
   return (
     <>
+      
+      <div className="container">
       <div className="d-flex justify-content-center m-4 mb-5">
         <button
           onClick={requestOrderHandler}
@@ -73,7 +75,6 @@ const OrderList = ({ orders }) => {
           Confirmed Orders
         </button>
       </div>
-      <div className="container">
         {!isConfirm && emptyRequestOrders}
         {isConfirm && emptyConfirmedOrders}
         <ul className={classes.list}>
@@ -82,8 +83,7 @@ const OrderList = ({ orders }) => {
               key={order.id}
               order={order}
               isConfirm={isConfirm}
-              trueOrders={trueOrders}
-              falseOrders={falseOrders}
+              
             />
           ))}
         </ul>

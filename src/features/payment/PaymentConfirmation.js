@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 const PaymentConfirmation = () => {
   return (
     <section className="container">
-        <div className="card-body">
+        <div className="card-body mb-5">
           <h3 className="card-title mt-4">PAYMENT CONFIRMATION</h3>
           <br/>
           <div className="border-top col-6"/>

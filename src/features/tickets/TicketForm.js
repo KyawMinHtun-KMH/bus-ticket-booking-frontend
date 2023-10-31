@@ -4,7 +4,6 @@ import { useDispatch,useSelector } from "react-redux";
 import { fetchAllRoute,getAllRoute } from "../routes/routeSlice";
 import { changeStatus, createTicket } from "./ticketSlice";
 import { fetchAllBus, getAllBus } from "../bus/busSlice";
-import { useNavigate } from "react-router-dom";
 import { getToken } from "../auths/authSlice";
 
 const TicketForm = () => {
@@ -86,8 +85,6 @@ const endLocation = bindRoute.substring(index+1)
 
 const depature = startDateTime.slice(0,10)
 
-
-  const navigate = useNavigate()
 
   const onSubmit = (e) =>{
     e.preventDefault()
