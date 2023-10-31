@@ -5,27 +5,20 @@ import { Link } from 'react-router-dom';
 import {
   getLoginStatus,
   getRoles,
-  getUser,
   logout
 } from "../../features/auths/authSlice";
 import { useDispatch, useSelector } from 'react-redux';
 
 const MainNavigation = () => {
   const loginStatus = useSelector(getLoginStatus);
-  const user = useSelector(getUser);
   const role = useSelector(getRoles)
   console.log(role);
 
   const dispatch = useDispatch()
 
-  let navProfile = "";
+ 
   let navLogin = "";
   if (loginStatus) {
-    navProfile = (
-      <li className="nav-item">
-        <Link className="nav-link text-white" to="/user/profile">{user.fullname}</Link>
-      </li>
-    );
     navLogin = <Link className="nav-link text-white" to="/user/logout" onClick={() => { dispatch(logout()) }}>Logout</Link>;
   } else {
     navLogin = <Link className="nav-link text-white" to="/user/login">Login</Link>;
@@ -70,7 +63,6 @@ const MainNavigation = () => {
             <Link to="/" className="nav-link active text-white" aria-current="page">Home</Link>
           </li>  
           {adminNav}
-          {navProfile}
           <li className="nav-item">{navLogin}</li>
           {userNav}
         </ul>

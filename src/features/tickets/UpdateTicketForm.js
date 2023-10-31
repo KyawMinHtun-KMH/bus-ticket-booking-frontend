@@ -2,11 +2,12 @@ import React from 'react'
 import { useState,useEffect } from 'react'
 import { useParams,useNavigate, Link } from 'react-router-dom'
 import { useSelector,useDispatch } from 'react-redux'
-import { getTicketById,updateTicket,deleteTicket } from './ticketSlice'
+import { getTicketById,updateTicket,deleteTicket, changeStatus } from './ticketSlice'
 import { fetchAllBus,getAllBus } from '../bus/busSlice'
 import { getAllRoute,fetchAllRoute } from '../routes/routeSlice'
 import { getToken } from '../auths/authSlice'
 import { fetchOrdersByTicketId, getOrders } from '../orders/orderSlice'
+import ChangeImage from './ChangeImage'
 
 
 const UpdateTicketForm = () => {
@@ -44,12 +45,6 @@ const UpdateTicketForm = () => {
       
       const today = new Date();
       const formattedDateTime = formatDateToISOStringWithoutSecondsAndMilliseconds(today);
-    
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1 and pad with 0 if needed
-      const day = String(today.getDate()).padStart(2, '0');
-    
-      const formattedDate = `${year}-${month}-${day}`;
 
       
 
@@ -84,10 +79,9 @@ const UpdateTicketForm = () => {
   {bindRoute}
   </option>)
     
-    const [imageURL,setImageURL] = useState(ticket?.imageURL)
+    // const [image,setImage] = useState("")
     const [typeName,setTypeName] = useState(ticket?.bus.typeName)
     const [price,setPrice] = useState(ticket?.price)
-    const [depature,setDepature] = useState(ticket?.depature)
     const [startDateTime,setStartDateTime] = useState(ticket?.startDateTime)
     const [endDateTime,setEndDateTime] = useState(ticket?.endDateTime)
     const [bindRoute,setBindRoute] = useState(existedBindRoute)
@@ -95,25 +89,25 @@ const UpdateTicketForm = () => {
 
     const onTypeNameChange = e => setTypeName(e.target.value)
     const onPriceChange = e => setPrice(e.target.value)
-    const onDepatureChange = e =>setDepature(e.target.value)
     const onStartDateTimeChange = e =>setStartDateTime(e.target.value)
     const onEndDateTimeChange = e =>setEndDateTime(e.target.value)
-    const onImageURLChange = (e) => {
-      setImageURL(e.target.value)
-    }
+    // const onImageChange = (e) => {
+    //   setImage(e.target.files[0])
+    // }
     const onBindRouteChange = e =>setBindRoute(e.target.value)
 
-    const canUpdate = [typeName,imageURL,price,depature,startDateTime,endDateTime,bindRoute].every(Boolean) && requestStatus === 'idle'
+    const canUpdate = [typeName,price,startDateTime,endDateTime,bindRoute].every(Boolean) && requestStatus === 'idle'
 
     const index = bindRoute.indexOf('-')
     const startLocation = bindRoute.substring(0,index)
     const endLocation = bindRoute.substring(index+1)
 
+    const depature = startDateTime.slice(0,10)
+
     const navigate = useNavigate()
 
     const onUpdate=(e) =>{
         e.preventDefault()
-        
         
         if(canUpdate){
             setRequestStatus("pending")
@@ -122,7 +116,7 @@ const UpdateTicketForm = () => {
                     ticket : {
                         id : ticket.id,
                         price,
-                        imageURL,
+                        image : ticket.image,
                         depature,
                         startDateTime,
                         endDateTime
@@ -136,6 +130,7 @@ const UpdateTicketForm = () => {
                 token :String(token)
             })
         )
+        dispatch(changeStatus("idle"))
         setRequestStatus("idle")
         navigate("/")
       
@@ -167,7 +162,7 @@ const UpdateTicketForm = () => {
           
         </div>
       )
-      } else return (<div className='container mt-5 mb-5'>
+      } else return (<><div className='container mt-5 mb-5'>
       <div className="card">
         <div className="card-body">
         <h4 className="card-title text-success">Update ticket</h4>
@@ -187,12 +182,6 @@ const UpdateTicketForm = () => {
           <input type="text" className="form-control" id="price" value={price} onChange={onPriceChange}/>
         </div>
         
-        <div className="col-12">
-          <label htmlFor="depature" className="form-label">
-            Depature Date
-          </label>
-          <input type="date" className="form-control" id="depature" value={depature} onChange={onDepatureChange} min={formattedDate}/>
-        </div>
         <div className="col-6">
           <label htmlFor="startDateTime" className="form-label">
             Start DateTime
@@ -206,17 +195,17 @@ const UpdateTicketForm = () => {
             min={formattedDateTime}
           />
         </div>
-        <div className='col-6'>
+        {/* <div className='col-6'>
           <label htmlFor="image" className="form-label">image</label>
-          <input type='text' id='image' value={imageURL} className="form-control" onChange={onImageURLChange}/>
-        </div>
+          <input type='file' id='image' className="form-control" onChange={onImageChange}/>
+        </div> */}
         <div className="col-md-6">
           <label htmlFor="endDateTime" className="form-label">
             End DateTime
           </label>
           <input type="datetime-local" className="form-control" id="endDateTime" value={endDateTime} onChange={onEndDateTimeChange} min={formattedDateTime}/>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-12">
           <label htmlFor="route" className="form-label">
             Route
           </label>
@@ -256,7 +245,8 @@ const UpdateTicketForm = () => {
       </form>
       </div>
       </div>
-      </div>)
+      </div>
+      <ChangeImage /></>)
     }
 
   return (

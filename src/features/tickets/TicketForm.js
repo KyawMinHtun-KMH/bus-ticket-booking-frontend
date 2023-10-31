@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import { fetchAllRoute,getAllRoute } from "../routes/routeSlice";
-import { createTicket } from "./ticketSlice";
+import { changeStatus, createTicket } from "./ticketSlice";
 import { fetchAllBus, getAllBus } from "../bus/busSlice";
-import { useNavigate } from "react-router-dom";
 import { getToken } from "../auths/authSlice";
 
 const TicketForm = () => {
   
-  const [imageURL,setImageURL] = useState("")
+  const [image,setImage] = useState("")
   const [typeName,setTypeName] = useState("Scania VIP")
   const [price,setPrice] = useState(0.0)
   // const [depature,setDepature] = useState("")
@@ -76,9 +75,9 @@ const onPriceChange = e => setPrice(e.target.value)
 const onStartDateTimeChange = e =>setStartDateTime(e.target.value)
 const onEndDateTimeChange = e =>setEndDateTime(e.target.value)
 const onBindRouteChange = e =>setBindRoute(e.target.value)
-const onImageURLChange = e =>setImageURL(e.target.value)
+const onImageChange = e =>setImage(e.target.files[0])
 
-const canCreate = [typeName,imageURL,price/*,depature*/,startDateTime,endDateTime,bindRoute].every(Boolean) && requestStatus === 'idle'
+const canCreate = [typeName,image,price/*,depature*/,startDateTime,endDateTime,bindRoute].every(Boolean) && requestStatus === 'idle'
 
 const index = bindRoute.indexOf('-')
 const startLocation = bindRoute.substring(0,index)
@@ -87,18 +86,16 @@ const endLocation = bindRoute.substring(index+1)
 const depature = startDateTime.slice(0,10)
 
 
-  const navigate = useNavigate()
-
   const onSubmit = (e) =>{
     e.preventDefault()
-
+    const formData = new FormData()
+    formData.append("file",image)
     if(canCreate){
       setRequestStatus('pending')
       dispatch(createTicket({
         ticketRequest :{
         ticket : {
           price,
-          imageURL,
           depature,
           startDateTime,
           endDateTime
@@ -109,11 +106,19 @@ const depature = startDateTime.slice(0,10)
           endLocation
         }
       },
-      token :String(token)
+      token :String(token),
+      formData
       
       }))
+
+      dispatch(changeStatus("idle"))
       setRequestStatus("idle")
-      navigate("/")
+      // navigate("/")
+      setPrice(0.0)
+      setTypeName("Scania VIP")
+      setStartDateTime("")
+      setEndDateTime("")
+      setBindRoute("MANDALAY-YANGON")
       
     }
   }
@@ -167,9 +172,9 @@ const depature = startDateTime.slice(0,10)
         <label htmlFor="image" className="form-label" >
           Image
         </label>
-        <input type="text" className="form-control" id="image" value={imageURL} onChange={onImageURLChange}/>
+        <input type="file" className="form-control" id="image"  onChange={onImageChange}/>
       </div>
-      <div className="col-md-4">
+      <div className="col-md-6">
         <label htmlFor="route" className="form-label">
           Route
         </label>
@@ -178,7 +183,7 @@ const depature = startDateTime.slice(0,10)
         </select>
       </div>
 
-      <div className="col-12">
+      <div className="col-12 d-flex justify-content-center">
         <button type="submit" disabled={!canCreate} onClick={onSubmit} className="btn btn-primary">
           Create
         </button>

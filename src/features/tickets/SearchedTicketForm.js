@@ -140,7 +140,7 @@ const SearchedTicketForm = () => {
         <i className="fa fa-minus" id="decrement-icon" style={{color: 'blue'}}></i>
       </button>
       {/*<input type="text" className="form-control" id="SeatAmount" value={seatAmount} placeholder="Seat" onChange={onSeatAmountChange} required />*/}
-      <div className="bg-white flex-grow-1 text-center border-top border-bottom">
+      <div className="bg-white flex-grow-1 text-center border-top border-bottom pt-1">
         <span>{seat}</span>
         <span>{seatAmountText}</span>
       </div>

@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
-import styles from './SigninSignup.module.css'; 
+import styles from './SigninSignup.module.css'; // Import your CSS module
 import signinImage from './signin.jpg';
-import signupImage from './signup.jpg';
+import signupImage from './signup.jpg'; // Import the signup image
 import eyeClose from './hide_8105914.png'
 import eyeOpen from './view_7748016 (1).png'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -133,7 +133,7 @@ useEffect(()=>{
             </span>
           </div>
           <div>
-             {incorrect && <p className="text-danger">{incorrect}</p>}
+             {incorrect && <p className="text-danger"><small>{incorrect}</small></p>}
           </div>
           <input type="submit" value="Login" className={styles.btn1} onClick={onSignin} disabled={!canLogin}/>
           <p className={styles['account-text']}>
@@ -177,10 +177,10 @@ useEffect(()=>{
             } 
             </span>
           </div>
-          {codeError && <p className="text-danger">This email has already have and account. Please try again.</p>}
+          {codeError && <p className="text-danger"><small>This email has already have and account.</small></p>}
           <button
           type="submit"
-          className={`btn ${styles.btn1}`}
+          className={styles.btn1}
           onClick={vertifyMail}
           disabled={!canSignup}
         >
