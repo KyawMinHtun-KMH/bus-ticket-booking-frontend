@@ -215,7 +215,7 @@ const SelectSeat = ({ seats }) => {
       <div className="row">
         <div className="col-md-7 d-flex justify-content-center mb-3">
           <div className="card">
-            <div className="card-header">Please select 1 seat(s).</div>
+            <div className="card-header">Please select {seatAmount} seat(s).</div>
             <div className="card-body">
               <div className="row">{busType(ticket)}</div>
             </div>

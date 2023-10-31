@@ -10,7 +10,7 @@ async (data) => {
         "Authorization":data.token
       },
     })
-    if(rejectMailResponse.status === 200){
+     if(rejectMailResponse.status === 200){
 
     const response = await axios.delete(`${orderPath}/${data.orderId}/delete`,
     {
@@ -18,7 +18,8 @@ async (data) => {
         "Content-Type": "application/json",
         "Authorization":data.token
       },
-    });
+    }
+    );
     
     return {
       statusCode: response.status,
@@ -126,7 +127,11 @@ const initialState = {
 const orderSlice = createSlice({
   name: "orderSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    changeStatus : (state, action)=>{
+      state.status = action.payload
+    }
+  },
   extraReducers(builder) {
     builder
     .addCase(fetchOrdersByTicketId.fulfilled, (state, action) => {
@@ -147,6 +152,13 @@ const orderSlice = createSlice({
       } else {
         console.log("error occured in fetchOrdersByTicketId");
       }
+    })
+    .addCase(fetchOrdersByTicketId.pending, (state) => {
+      state.status = "loading";
+    })
+    .addCase(fetchOrdersByTicketId.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
     })
     .addCase(fetchConfirmOrder.fulfilled, (state, action) => {
       const response = action.payload;
@@ -183,13 +195,7 @@ const orderSlice = createSlice({
         console.log("error occured in deleteOrder");
       }
     })
-    .addCase(fetchOrdersByTicketId.pending, (state) => {
-      state.status = "loading";
-    })
-    .addCase(fetchOrdersByTicketId.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.payload;
-    })
+    
     .addCase(fetchOrdersByUser.fulfilled, (state, action) => {
       const response = action.payload;
 
@@ -243,3 +249,4 @@ export const getError = (state) => state.orders.error;
 export const getOrder = (state) => state.orders.order;
 // export const getOrderById = (state, orderId) =>
 //   state.orders.orders.find((order) => order.id === Number(orderId));
+export const { changeStatus } = orderSlice.actions

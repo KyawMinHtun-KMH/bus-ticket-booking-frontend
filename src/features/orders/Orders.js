@@ -10,13 +10,14 @@ const Orders = () => {
     console.log(ticketId);
 
     const dispatch = useDispatch()
-
+    
+    console.log(status);
     useEffect(() => {
-       
+       if (status === 'idle') {
             dispatch(fetchOrdersByTicketId(
                 ticketId))
-        
-    },[ticketId,dispatch])
+            }
+    },[ticketId,dispatch,status])
 
     const orders = useSelector(getOrders)
     const error = useSelector(getError)
@@ -27,6 +28,7 @@ const Orders = () => {
 
     if(status === 'success'){
         content = <OrderList orders={orders} /> 
+        
     }
 
     if(status === 'loading'){
