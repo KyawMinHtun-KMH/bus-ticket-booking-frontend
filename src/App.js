@@ -20,7 +20,7 @@ import UnAuthorize from "./features/auths/UnAuthorize";
 import { getRoles } from "./features/auths/authSlice";
 import { useSelector } from "react-redux";
 import SigninSignup from "./features/users/SigninSignup";
-
+import EmailConfirm from "./features/users/EmailConfirm";
 
 function App() {
   const role = useSelector(getRoles)
@@ -41,6 +41,7 @@ function App() {
       <Route path="user" element={<NewUser />}>
           {/* <Route path="register" element={<Signup />} /> */}
           <Route path="login" element={<SigninSignup />} />
+          <Route path="login/confirm" element={<EmailConfirm />} />
           <Route path="logout" element={<Navigate to="/" replace={true} />} />
         </Route>
 

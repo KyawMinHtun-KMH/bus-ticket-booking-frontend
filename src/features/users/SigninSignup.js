@@ -1,12 +1,12 @@
 import React, { useState,useEffect } from 'react';
-import styles from './SigninSignup.module.css'; // Import your CSS module
+import styles from './SigninSignup.module.css'; 
 import signinImage from './signin.jpg';
-import signupImage from './signup.jpg'; // Import the signup image
+import signupImage from './signup.jpg';
 import eyeClose from './hide_8105914.png'
 import eyeOpen from './view_7748016 (1).png'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getToken, signin, signup } from '../auths/authSlice';
+import { addUser, getCode, getToken, mailConfirm, signin } from '../auths/authSlice';
 import { getLoginStatus } from '../auths/authSlice';
 import { changeStatus } from '../tickets/ticketSlice';
 
@@ -19,7 +19,7 @@ function SigninSignup() {
   };
 
   const [incorrect,setIncorrect] = useState('')
-  const [userExisted,setUserExisted] = useState('')
+  // const [userExisted,setUserExisted] = useState('')
   const [showPassword,setShowPassword] = useState(false)
   const [firstName,setFirstName] = useState('')
   const [lastName,setLastName] = useState('')
@@ -27,6 +27,8 @@ function SigninSignup() {
   const [username,setUsername] = useState('')
   const [password,setPassword] = useState('')
   const [requestStatus,setRequestStatus] = useState('idle')
+  const [codeError, setCodeError] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const onPasswordVisibilty = () => {setShowPassword(!showPassword)}
   const onFirstNameChange = e => setFirstName(e.target.value)
@@ -44,6 +46,8 @@ function SigninSignup() {
   const canSignup = [firstName,lastName,fullname,username,password].every(Boolean) && requestStatus === 'idle'
   const status = useSelector(getLoginStatus)
   const token = useSelector(getToken)
+  const code = useSelector(getCode)
+  console.log(code);
   useEffect(() => {
   
     if (status === true) {
@@ -51,46 +55,40 @@ function SigninSignup() {
     }
   },[status,from,navigate]);
 
-
-
-  const onSignup = (e) => {
-    e.preventDefault()
+  const vertifyMail = async (e) => {
+    e.preventDefault();
     if (canSignup) {
-      setRequestStatus('pending')
-      dispatch(signup({
-        firstName,
-        lastName,
-        fullname,
-        username,
-        password
-
+      setLoading(true); // Set loading state to true while waiting for response
+      dispatch(mailConfirm({
+        to: String(username)
       }))
-
-      dispatch(changeStatus("idle"))
-      if(token !== ''){
-        setUserExisted("email is already existed")
-      }
-
-      // navigate(from,{replace : true})
-      setRequestStatus('idle')
+        .then(() => setLoading(false)) // Once the response is received, set loading state back to false
+        .catch(() => setLoading(false)); // Handle error by setting loading state to false
     }
-}
+  };
+
+useEffect(() => {
+  if (String(code) === String(0)) {
+    setCodeError(true);
+  } else if (String(code) !== String(0) && code !== "") {
+    dispatch(addUser({ 
+      firstName,
+      lastName,
+      fullname,
+      username,
+      password
+    }));
+    navigate(`/user/login/confirm`);
+  }
+}, [code, navigate, firstName, lastName, fullname, username, password, dispatch]);
 
 const canLogin = [username,password].every(Boolean) && requestStatus === 'idle'
-
-
-
-
 
 useEffect(()=>{
   if(token !== ''){
     setIncorrect("email or password is incorrect !")
     }
 },[token])
-
-
-
-
 
   const onSignin = (e) => {
     e.preventDefault()
@@ -100,6 +98,7 @@ useEffect(()=>{
         username,
         password
       }))
+      dispatch(changeStatus("idle"))
       setRequestStatus('idle')
       console.log(status)
       setPassword('')
@@ -109,6 +108,7 @@ useEffect(()=>{
 }
 
   return (
+    <>
     <div className={styles.body}>
     <div className={`${styles.container1} ${isSignUpMode ? styles['sign-up-mode'] : ''}`}>
       <div className={styles['signin-signup1']}>
@@ -142,6 +142,7 @@ useEffect(()=>{
               Sign up
             </Link>
           </p>
+          
         </form>
         <form
           className={`${styles['form1']} ${isSignUpMode ? '' : styles.hidden}`}
@@ -176,10 +177,26 @@ useEffect(()=>{
             } 
             </span>
           </div>
-          <div>
-             {userExisted && <p className="text-danger">{userExisted}</p>}
-          </div>
-          <input type="submit" value="Sign up" className={styles.btn1} onClick={onSignup} disabled={!canSignup}/>
+          {codeError && <p className="text-danger">This email has already have and account. Please try again.</p>}
+          <button
+          type="submit"
+          className={`btn ${styles.btn1}`}
+          onClick={vertifyMail}
+          disabled={!canSignup}
+        >
+          {isLoading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Signing up...</span>
+            </>
+          ) : (
+            'Sign up'
+          )}
+        </button>
           <p className={styles['account-text']}>
             Already have an account?{' '}
             <Link to="#" onClick={() => toggleMode(false)} id="sign-in-btn2">
@@ -199,7 +216,9 @@ useEffect(()=>{
             <button className={styles.btn1} onClick={() => toggleMode(false)} id="sign-in-btn">
               Sign in
             </button>
+            
           </div>
+          
           <img src={signinImage} alt="" className={styles.image} />
         </div>
         <div className={`${styles.panel} ${styles['right-panel']} ${isSignUpMode ? '' : styles['pointer-events-none']}`}>
@@ -218,6 +237,7 @@ useEffect(()=>{
       </div>
     </div>
     </div>
+  </>
   );
 }
 

@@ -2,21 +2,22 @@ import React from "react";
 
 const Order = ({ order }) => {
     console.log(order);
-  function dateTimeToTime(dateTime) {
-    const date = new Date(dateTime);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    let hour = 0;
-    if (hours > 12) {
-      hour = hours - 12;
-    } else {
-      hour = hours;
-    }
-
-    const dayNight = hours < 12 ? "AM" : "PM";
-
-    return `${hour}:${minutes} ${dayNight}`;
-  }
+    function dateTimeToTime(dateTime) {
+      const date = new Date(dateTime);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const formattedMinutes = String(minutes).padStart(2, "0");
+      let hour = 0;
+      if (hours > 12) {
+        hour = hours - 12;
+      } else {
+        hour = hours;
+      }
+  
+      const dayNight = hours < 12 ? "AM" : "PM";
+  
+      return `${hour}:${formattedMinutes} ${dayNight}`;
+    }  
 
   function getMonthName(monthNumber) {
     const monthNames = [

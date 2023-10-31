@@ -1,9 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { userPath } from "../config/pathConfig";
+import { emailPath, userPath } from "../config/pathConfig";
 import axios from "axios";
 
 const SIGNIN_URL = `${userPath}/signin`;
 const SIGNUP_URL = `${userPath}/signup`;
+
+export const mailConfirm = createAsyncThunk('mailConfirm',async (ConfirmEmailRequest) => {
+  try {
+    const response = await axios.post(`${emailPath}/code/confirm`, ConfirmEmailRequest, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return {
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error(error);
+  }
+})
 
 export const signin = createAsyncThunk("signin", async (loginRequest) => {
   try {
@@ -40,10 +57,10 @@ export const signup = createAsyncThunk("signup", async (user) => {
 
 const initialState = {
   loginStatus: false,
-  user: {
-  },
+  user: {},
   token : "",
   roles: [],
+  code: "",
 };
 
 const authSlice = createSlice({
@@ -55,14 +72,32 @@ const authSlice = createSlice({
        state.user = {}
        state.token = ""
        state.roles = []
+    },
+    addUser : (state , action) => {
+      const userData = action.payload
+      state.user = userData
+    },
+    cleanCode : (state) => {
+      state.code = ""
     }
   },
   extraReducers(builder) {
     builder
+    .addCase(mailConfirm.fulfilled, (state, action) => {
+      const response = action.payload;
+      
+      if (response?.statusCode) {
+        const { statusCode, data } = response;
+        if (statusCode === 200) {
+          state.code = data
+        }
+      } else {
+        console.log("error occur in mailConfirm!");
+      }
+    })
+
       .addCase(signin.fulfilled, (state, action) => {
         const response = action.payload;
-        
-
         if (response?.statusCode) {
           const { statusCode, data } = response;
           if (statusCode === 200) {
@@ -107,4 +142,5 @@ export const getLoginStatus = (state) => state.auths.loginStatus;
 export const getUser = (state) => state.auths.user;
 export const getRoles = (state) => state.auths.roles;
 export const getToken = (state) => state.auths.token;
-export const { logout } = authSlice.actions
+export const getCode = (state) => state.auths.code;
+export const { logout,addUser,cleanCode } = authSlice.actions
